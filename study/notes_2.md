@@ -1,7 +1,9 @@
- **C++ Concept Study Notes**
+[TOC]
+
+**C++ Concept Study Notes**
 ===========================================  
 
-Keywords, Operators & Semantics
+Keywords, Operators & Syntax
 -------
 1. C++ Standard Library has a rich collections of classes and functions. Include the library header file in the
 preprocessor directive **#include**.
@@ -9,6 +11,24 @@ preprocessor directive **#include**.
 2. **endl** inserts a new-line character and flushes the stream
 3. Unary scope resolution operator **::** is used to access a global variable. E.g. **::number**, here *number* is a global variable, not the local variable number. But use different names to avoid confusion.
 4. Just like C, C++ double is 8 bytes. Float is 4 bytes. 
+5. ++a (**pre increment**, return new value) vs. a++ (**post increment**, return original value)   a=1, In b = a++, b takes 1.  In b = ++a, b takes 2.
+6. C++ has standard library class template vector, **#include &lt;vector>**, it is a "super" array. E.g.
+* **vector<int> myIntVec( 10)** // initialises an array of 10 integers
+* **myIntVec.size()** // returns 10
+7. 
+
+Template
+-------
+A mean of code generation, a compact way to deal with same operation using different data types (i.e. overloading) ... 
+
+1. Function Template: See #5 in Function section. 
+2. Class Template
+* When using class template specialisation, syntax is like **class MyClass &lt;char>**
+* Out-of-line function definition for class template can be used.
+** Out-of-line function definition without template<...> prefix results in __compilation error__
+3. Template Specialisation: 
+* Define different implementation when different types of parameters passed to function constructor
+4. Mix of class and function templates: bespoke implementations for both class attributes and methods - **BAD** practice, could have caused confusion, but interesting to investigate the behaviour ... (look into the experiment in **mix_class_func_templt**)
 
 Functions
 -------
@@ -18,4 +38,19 @@ Functions
 * Use PBR for large data size to avoid the function calling overhead.
 3. Default argument: **int volume (int length = 1, int width);**
 4. **Function Overloading** means multiple functions can co-exist using the same function name but they have different set(s) of variables. 
-5.  **Function Templates** is a more compact way to perform **function overloading**. Templates are means of code generation. 
+5.  **Function Template** is a more compact way to perform **function overloading**. Templates are means of code generation. 
+
+OOP in C++
+-------
+1. Difference between encapsulation and  data abstraction:
+* Encapsulation: binding data and related functions together
+* Data Abstraction: Hiding the implementation details from usage. E.g. every time you call a method in an object like **Object.Method1()**
+2. Abstract Class vs. Concrete Class:
+* Abstract Class defines interfaces in C++, it cannot be instantiated. Interfaces describes the capability of a class but does not describe the implementation behind it.
+* Concrete Class are ones that can be instantiated. 
+3. More on Abstract class:
+* It provides a base class from which some other classes can inherit. 
+* At least one of the method is declared as **virtual method**, like **virtual double getArea() = 0;** 
+* Subclasses need to implement all virtual methods. Otherwise __compilation error__
+4.  Attributes:
+* Accessing private attribute outside the class results in a __compilation error__
