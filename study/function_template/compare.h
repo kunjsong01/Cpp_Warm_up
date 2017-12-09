@@ -5,6 +5,7 @@
  *      Author: kunson01
  */
 
+// prevent multiple inclusions of this header file
 #ifndef COMPARE_H_
 #define COMPARE_H_
 

@@ -1,4 +1,3 @@
-[TOC]
 
 **C++ Concept Study Notes**
 ===========================================  
@@ -54,3 +53,16 @@ OOP in C++
 * Subclasses need to implement all virtual methods. Otherwise __compilation error__
 4.  Attributes:
 * Accessing private attribute outside the class results in a __compilation error__
+5. Accessing attributes in an object:
+* By **name**, use **dot (.)** operator
+* By **reference**, use **dot (.)** operator
+* By **pointer**, use **arrow (->)** operator
+⋅⋅* Keyword "this" within a class appears to be a pointer, usage is **this->attribute**
+6. A class instance created without "new" stays on the stack. Too many of these could result in stack overflow.
+7. Keyword "new":
+* Usage is like **Box *b = new Box(1, 1.5);**
+* It allocates memory on the heap. It requires to be deleted explicitly, e.g. **delete b;**
+* The Rule: **Type new, type delete**. Otherwise, (probably) memory leak.
+* Look into experiment /study/stack_heap_destructor/heap_destructor_experiment.cpp
+7.
+  
