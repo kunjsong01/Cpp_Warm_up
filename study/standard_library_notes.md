@@ -1,5 +1,6 @@
+[TOC]
 
-**C++ Concept Study Notes**
+**C++ Standard Library Notes**
 ===========================================  
 
 Keywords, Operators & Syntax
@@ -14,7 +15,9 @@ preprocessor directive **#include**.
 6. C++ has standard library class template vector, **#include &lt;vector>**, it is a "super" array. E.g.
 * **vector<int> myIntVec( 10)** // initialises an array of 10 integers
 * **myIntVec.size()** // returns 10
-7. 
+7. >> extraction operator; << is insertion operator. They operate on iostreams, such as cin and cout.
+8. = assignment operator can be used to assign one object to another, performed by member-wise assignment.
+9. 
 
 Template
 -------
@@ -51,8 +54,9 @@ OOP in C++
 * It provides a base class from which some other classes can inherit. 
 * At least one of the method is declared as **virtual method**, like **virtual double getArea() = 0;** 
 * Subclasses need to implement all virtual methods. Otherwise __compilation error__
-4.  Attributes:
+4.  Attributes and accessors:
 * Accessing private attribute outside the class results in a __compilation error__
+* private, public, protected 
 5. Accessing attributes in an object:
 * By **name**, use **dot (.)** operator
 * By **reference**, use **dot (.)** operator
@@ -64,5 +68,38 @@ OOP in C++
 * It allocates memory on the heap. It requires to be deleted explicitly, e.g. **delete b;**
 * The Rule: **Type new, type delete**. Otherwise, (probably) memory leak.
 * Look into experiment /study/stack_heap_destructor/heap_destructor_experiment.cpp
-7.
-  
+8. Keyword "const":
+* Non-const method cannot be called by const object. 
+* Const method can be called by any type of object. 
+* Look into experiment /study/const_method_behaviour
+9. Usage of "this" pointer:
+* Access attributes or method within a class
+* Return current object from member function, e.g. **return *this**
+* Guard self-reference, e.g. if ( &otherObject != this)
+10. **Composition** means a class has an object of another class as its member
+* has-a relation, e.g. a car has-a engine, and this engine only belongs to that specific car
+* Look into experiment /study/composition
+
+More on OOP
+-------
+1. **Friendship** in C++, **Friend** function and **Friend** class
+2. **Friend** class 
+3. **Friend** function
+4. Inheritance and modes of inheritance: 
+* **Private member(s)** will **never** be inherited from the superclass! 
+* Accessor behaviours are summarised below: 
+|  -------    |  Subclass in _[public]_ mode | Subclass in _[private]_ mode  | Subclass in _[protected]_ mode |
+| ------------ |:-------------:|:-------------:|:-------------:|
+| private      | NOT inherited 	  | NOT inherited  | NOT inherited  |
+| public       | public      	  | private 	   | protected 		|
+| protected    | protected        | Private 	   | protected 		|
+
+
+* single-level inheritance
+* Multi-level inheritance (use the above table to "derive" the accessor relationships)
+** Makes it interesting when inherit from a private subclass... 
+* Multiple inheritance, e.g. **class cat: public class animal, public class mammal { ... }**
+* Hierarchical Inheritance
+* Hybrid Inheritance (any combinations of the above mentioned types...)
+5. Mimic "super" in C++: https://stackoverflow.com/questions/180601/using-super-in-c
+6. 
