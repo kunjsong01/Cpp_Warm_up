@@ -17,7 +17,6 @@ preprocessor directive **#include**.
 * **myIntVec.size()** // returns 10
 7. >> extraction operator; << is insertion operator. They operate on iostreams, such as cin and cout.
 8. = assignment operator can be used to assign one object to another, performed by member-wise assignment.
-9. 
 
 Template
 -------
@@ -97,6 +96,7 @@ More on OOP
 4. Inheritance and modes of inheritance: 
 * **Private member(s)** will **never** be inherited from the superclass! 
 * Accessor behaviours are summarised below: 
+
 	|  -------    |  Subclass in _[public]_ mode | Subclass in _[private]_ mode  | Subclass in _[protected]_ mode |
 	| ------------ |:-------------:|:-------------:|:-------------:|
 	| private      | NOT inherited 	  | NOT inherited  | NOT inherited  |
@@ -111,5 +111,5 @@ More on OOP
 * Hybrid Inheritance (any combinations of the above mentioned types...)
 
 5. Mimic "super" in C++: https://stackoverflow.com/questions/180601/using-super-in-c
-6. __Friends__ are inherited if there is no function overriding. 
+6. __Friends__ are inherited if there is no function overriding in the subclass. 
 * See experiment in /study/friend_and_inheritance/
