@@ -21,7 +21,7 @@ preprocessor directive **#include**.
 
 Template
 -------
-A mean of code generation, a compact way to deal with same operation using different data types (i.e. overloading) ... 
+A mean of code generation, a compact way to deal with same operation using different data types (i.e. overloading) ... compile-time polymorphism
 
 1. Function Template: See #5 in Function section. 
 2. Class Template
@@ -68,7 +68,7 @@ OOP in C++
 * It allocates memory on the heap. It requires to be deleted explicitly, e.g. **delete b;**
 * The Rule: **Type new, type delete**. Otherwise, (probably) memory leak.
 * Look into experiment /study/stack_heap_destructor/heap_destructor_experiment.cpp
-8. Keyword "const":
+8. __const__ members and objects:
 * Non-const method cannot be called by const object. 
 * Const method can be called by any type of object. 
 * Look into experiment /study/const_method_behaviour
@@ -79,21 +79,29 @@ OOP in C++
 10. **Composition** means a class has an object of another class as its member
 * has-a relation, e.g. a car has-a engine, and this engine only belongs to that specific car
 * Look into experiment /study/composition
+11. **Function Overriding**: In Base Class, there is a function A. In the Derived Class, function A can be implemented 0
 
 More on OOP
 -------
 1. **Friendship** in C++, **Friend** function and **Friend** class
-2. **Friend** class 
-3. **Friend** function
+> Friendship in C++ is __NOT__ transitive, i.e. the friend of a friend does not work unless explicitly specified.
+> Friendship in C++ is __NOT__ mutual, i.e. the A is declared as friend within B, but B still cannot access A's private or protected members.
+
+2. **Friend** class
+> If A is declared as friend within B, A can access B's __private__ or __protected__ members.
+
+3. **Friend** function implements the operations that are conducted between two different classes 
+> Friend function of a class can access the __private__ and __protected__ members within that class, but it is __NOT__ a member of that class!
+> Friend function takes a reference to object as the input
+
 4. Inheritance and modes of inheritance: 
 * **Private member(s)** will **never** be inherited from the superclass! 
 * Accessor behaviours are summarised below: 
-|  -------    |  Subclass in _[public]_ mode | Subclass in _[private]_ mode  | Subclass in _[protected]_ mode |
-| ------------ |:-------------:|:-------------:|:-------------:|
-| private      | NOT inherited 	  | NOT inherited  | NOT inherited  |
-| public       | public      	  | private 	   | protected 		|
-| protected    | protected        | Private 	   | protected 		|
-
+	|  -------    |  Subclass in _[public]_ mode | Subclass in _[private]_ mode  | Subclass in _[protected]_ mode |
+	| ------------ |:-------------:|:-------------:|:-------------:|
+	| private      | NOT inherited 	  | NOT inherited  | NOT inherited  |
+	| public       | public      	  | private 	   | protected 		|
+	| protected    | protected        | Private 	   | protected 		|
 
 * single-level inheritance
 * Multi-level inheritance (use the above table to "derive" the accessor relationships)
@@ -101,5 +109,7 @@ More on OOP
 * Multiple inheritance, e.g. **class cat: public class animal, public class mammal { ... }**
 * Hierarchical Inheritance
 * Hybrid Inheritance (any combinations of the above mentioned types...)
+
 5. Mimic "super" in C++: https://stackoverflow.com/questions/180601/using-super-in-c
-6. 
+6. __Friends__ are inherited if there is no function overriding. 
+* See experiment in /study/friend_and_inheritance/
