@@ -33,16 +33,17 @@ class FounderReporter {
 		}
 };
 
-// Is friendship not inherited in this way?
+// this works fine 
 class FalseReporter: public FounderReporter {
 	public:
 		void printFounder(Polygon p) {
 			// The following line gives error!
+            // If overriding, this derived "false friend" cannot access the data of its base's friend
 			//cout << "This is founder returned from DERIVED friend class object: " << p.founder << endl;
 		}
 };
 
-// friendship is not inherited??
+// this also works fine 
 class TrueReporter: public FounderReporter {
 
 };
