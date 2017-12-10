@@ -10,16 +10,15 @@ C++03
 * Automatic storage means the variable(s) will be destroyed at the end of enclosing braces.
 * Static storage means the variable(s) will be destroyed when program finishes.
 * Dynamic storage means the thing to which a pointer of automatic storage pointing will not be destroyed at the end of enclosing braces. Use **delete** to delete manually otherwise you leak the memory.
+* **Good programming practice** : In order to avoid making **dangling pointer**, assign the pointer to NULL 
+**p = NULL** after deleting the dynamic memory allocation on heap. 
+* Is leaked memory freed when a process terminates? Yes, OS will free it. However, in some RTOS, it may not be freed. 
 
 Struct vs. Class
 -------
 * Just like class, struct can be inherited in C++. The only different is default accessibility (member-wise and inheritance wise). Struct by default is public. Class by default is private. 
 * Structs also have constructor and destructor.
 
-Orders of constructor and destructor calling in Composition
--------
-* 
- 
 Template
 -------
 A mean of code generation, a compact way to deal with same operation using different data types (i.e. overloading) ... compile-time polymorphism
@@ -32,6 +31,27 @@ A mean of code generation, a compact way to deal with same operation using diffe
 3. Template Specialisation: 
 * Define different implementation when different types of parameters passed to function constructor
 4. Mix of class and function templates: bespoke implementations for both class attributes and methods - **BAD** practice, could have caused confusion, but interesting to investigate the behaviour ... (look into the experiment in **mix_class_func_templt**)
+
+Binding
+-------
+Connecting function call to function body.
+
+1. When using **Base class pointer** to reference **Derived class object**, Early Binding occurs. Function call will be connected to that function within Base class instead of the overrided function in the Derived class. 
+2. Using keyword **virtual** in that function will resolve the problem. This is Late Binding (type of the object can be determined at run time). Note that this is not the pure virtual function.
+
+Virtual Destructor
+-------
+
+1. When using **Base class pointer** to reference **Derived class object**, destructor within the derived class will NOT be called when performing a delete operation. 
+2. Again, this can be fixed by making base class destructor **virtual**. 
+3. **Good programming practice** : To ensure against any surprise later, any time you have a virtual function in the base class, make destructor virtual. 
+
+Orders of constructor and destructor calling in Composition/ Inheritance
+-------
+* In inheritance, the order is Base Constr ---> Derived Constr ---> Derived Destr ---> Base Destr
+** Yes, base constr/destr are not inherited but always get called. 
+* In composition, assume Class has two members made from Member1 class and Member2 class. 
+** The order is Member1 Constr ---> Member2 Constr ---> Member2 Destr ---> Member1 Constr (Think of it like a stack, FILO)
 
 Functions
 -------
@@ -65,7 +85,7 @@ OOP in C++
 ⋅⋅* Keyword "this" within a class appears to be a pointer, usage is **this->attribute**
 6. A class instance created without "new" stays on the stack. Too many of these could result in stack overflow.
 7. Keyword "new":
-* Usage is like **Box *b = new Box(1, 1.5);**
+* Usage is like **Box *b = new Box(1, 1.5);**, **int *p = new int;**. Pointers p and b are on the stack.
 * It allocates memory on the heap. It requires to be deleted explicitly, e.g. **delete b;**
 * The Rule: **Type new, type delete**. Otherwise, (probably) memory leak.
 * Look into experiment /study/stack_heap_destructor/heap_destructor_experiment.cpp
@@ -114,7 +134,7 @@ Friends and Inheritance
 * Hybrid Inheritance (any combinations of the above mentioned types...)
 
 5. Mimic "super" in C++: https://stackoverflow.com/questions/180601/using-super-in-c
-6. __Friends__ are NOT inherited if there is no function overriding in the subclass. 
+6. __Friends__ are NOT inherited if there is no function overriding in the subclass. i.e. If A is friend of B, C is inherited from A. You cannot get B's data within class C. 
 * See experiment in /study/friend_and_inheritance/
 7. Things that are __NOT INHERITED__ from base class, including:
 * constructor and destructor
@@ -135,3 +155,5 @@ Miscellaneous
 * **myIntVec.size()** // returns 10
 4. >> extraction operator; << is insertion operator. They operate on iostreams, such as cin and cout.
 5. = assignment operator can be used to assign one object to another, performed by member-wise assignment.
+6. **Abstract class** is a class that has at least one pure virtual function and cannot be instantiated, e.g. **virtual void printID() = 0**. This type of class is intentionally designed to be used as base class. A concrete class is a class that can be used to make objects. 
+7. **Polymorphism** example in C++: a function can have many forms, i.e. overriding in derived class. Furthermore, in order to avoid Early Binding, you need to make that function in the base class "**virtual**". 
