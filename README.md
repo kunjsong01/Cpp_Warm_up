@@ -5,9 +5,9 @@ A quick review on C++ that consists of two parts:
 * brush up on C++ concepts, template, memory management, OOP behaviour (friend, inheritance, composition, constructor/destructor calling order .etc).
 * brush on STL, such as usage of container/vector, using iterator to loop container. 
 
-There are some experiment programs in brush_up folder which could help one to understand some 'tricky' behaviours.
+There are some experiment programs in *brush_up* folder which could help one to understand some 'tricky' behaviours.
 
-The remaining questions folder has two experiment programs:
+The *remaining_question* folder has two experiment programs:
 
 1. A program to examine the behaviour for the following question:
 
