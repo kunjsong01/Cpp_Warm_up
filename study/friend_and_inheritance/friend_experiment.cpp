@@ -33,7 +33,7 @@ class FounderReporter {
 		}
 };
 
-// friendship is not inherited in this way
+// Is friendship not inherited in this way?
 class FalseReporter: public FounderReporter {
 	public:
 		void printFounder(Polygon p) {
@@ -42,7 +42,7 @@ class FalseReporter: public FounderReporter {
 		}
 };
 
-// friendship is not inherited
+// friendship is not inherited??
 class TrueReporter: public FounderReporter {
 
 };
@@ -60,6 +60,8 @@ class Shape: public Polygon {
 		Shape(string _Tag, int n): Polygon(_Tag), numberOfSides(n) {
 			// need to explicitly initialize the base class constructor which does not have a default constructor
 			cout << "Creating a shape, using tag and int" << endl;
+			cout << "shape has " << myTag << " tag." << endl;
+			cout << "shape has " << numberOfSides << " sides." << endl;
 		}
 };
 
@@ -79,7 +81,7 @@ int main() {
 	//FalseReporter frDerived;
 	//frDerived.printFounder(p);
 
-	// The following lines work fine
+	// The following line works fine
 	TrueReporter tr;
 	tr.printFounder(p);
 	tr.printFounder(s);

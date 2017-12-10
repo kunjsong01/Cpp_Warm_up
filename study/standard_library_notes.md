@@ -3,21 +3,23 @@
 **C++ Standard Library Notes**
 ===========================================  
 
-Keywords, Operators & Syntax
+Storage Duration (Automatic, Static and Dynamic Memory)
 -------
-1. C++ Standard Library has a rich collections of classes and functions. Include the library header file in the
-preprocessor directive **#include**.
-* **using namespace std** saves lots of typing effort. It allows compiler to understand the keywords. 
-2. **endl** inserts a new-line character and flushes the stream
-3. Unary scope resolution operator **::** is used to access a global variable. E.g. **::number**, here *number* is a global variable, not the local variable number. But use different names to avoid confusion.
-4. Just like C, C++ double is 8 bytes. Float is 4 bytes. 
-5. ++a (**pre increment**, return new value) vs. a++ (**post increment**, return original value)   a=1, In b = a++, b takes 1.  In b = ++a, b takes 2.
-6. C++ has standard library class template vector, **#include &lt;vector>**, it is a "super" array. E.g.
-* **vector<int> myIntVec( 10)** // initialises an array of 10 integers
-* **myIntVec.size()** // returns 10
-7. >> extraction operator; << is insertion operator. They operate on iostreams, such as cin and cout.
-8. = assignment operator can be used to assign one object to another, performed by member-wise assignment.
+C++03
 
+* Automatic storage means the variable(s) will be destroyed at the end of enclosing braces.
+* Static storage means the variable(s) will be destroyed when program finishes.
+* Dynamic storage means the thing to which a pointer of automatic storage pointing will not be destroyed at the end of enclosing braces. Use **delete** to delete manually otherwise you leak the memory.
+
+Struct vs. Class
+-------
+* Just like class, struct can be inherited in C++. The only different is default accessibility (member-wise and inheritance wise). Struct by default is public. Class by default is private. 
+* Structs also have constructor and destructor.
+
+Orders of constructor and destructor calling in Composition
+-------
+* 
+ 
 Template
 -------
 A mean of code generation, a compact way to deal with same operation using different data types (i.e. overloading) ... compile-time polymorphism
@@ -71,7 +73,7 @@ OOP in C++
 * Non-const method cannot be called by const object. 
 * Const method can be called by any type of object. 
 * Look into experiment /study/const_method_behaviour
-9. Usage of "this" pointer:
+9. Usage of "__this__" pointer:
 * Access attributes or method within a class
 * Return current object from member function, e.g. **return *this**
 * Guard self-reference, e.g. if ( &otherObject != this)
@@ -79,8 +81,9 @@ OOP in C++
 * has-a relation, e.g. a car has-a engine, and this engine only belongs to that specific car
 * Look into experiment /study/composition
 11. **Function Overriding**: In Base Class, there is a function A. In the Derived Class, function A can be implemented 0
+12. __Constructor__ can also be overloaded in similar ways as functions.
 
-More on OOP
+Friends and Inheritance
 -------
 1. **Friendship** in C++, **Friend** function and **Friend** class
 > Friendship in C++ is __NOT__ transitive, i.e. the friend of a friend does not work unless explicitly specified.
@@ -89,9 +92,9 @@ More on OOP
 2. **Friend** class
 > If A is declared as friend within B, A can access B's __private__ or __protected__ members.
 
-3. **Friend** function implements the operations that are conducted between two different classes 
+3. **Friend** functions implement the operations that are conducted between two different classes 
 > Friend function of a class can access the __private__ and __protected__ members within that class, but it is __NOT__ a member of that class!
-> Friend function takes a reference to object as the input
+> Friend function takes a reference to object as input
 
 4. Inheritance and modes of inheritance: 
 * **Private member(s)** will **never** be inherited from the superclass! 
@@ -111,5 +114,24 @@ More on OOP
 * Hybrid Inheritance (any combinations of the above mentioned types...)
 
 5. Mimic "super" in C++: https://stackoverflow.com/questions/180601/using-super-in-c
-6. __Friends__ are inherited if there is no function overriding in the subclass. 
+6. __Friends__ are NOT inherited if there is no function overriding in the subclass. 
 * See experiment in /study/friend_and_inheritance/
+7. Things that are __NOT INHERITED__ from base class, including:
+* constructor and destructor
+** The default constructor and destructor (i.e. not parameterised ones) are always called
+* Friends
+* oprator overloading members
+
+Operator Overloading
+-------
+1. 
+
+Miscellaneous
+-------
+1. Unary scope resolution operator **::** is used to access a global variable. E.g. **::number**, here *number* is a global variable, not the local variable number. But use different names to avoid confusion.
+2. ++a (**pre increment**, return new value) vs. a++ (**post increment**, return original value)   a=1, In b = a++, b takes 1.  In b = ++a, b takes 2.
+3. C++ has standard library class template vector, **#include &lt;vector>**, it is a "super" array. E.g.
+* **vector<int> myIntVec( 10)** // initialises an array of 10 integers
+* **myIntVec.size()** // returns 10
+4. >> extraction operator; << is insertion operator. They operate on iostreams, such as cin and cout.
+5. = assignment operator can be used to assign one object to another, performed by member-wise assignment.
