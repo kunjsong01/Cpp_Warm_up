@@ -17,11 +17,12 @@ Mini roadmap for C++ review:
 
 2. The *remaining_question* folder has two experiment programs:
 
-    2 a). A program to examine the behaviour of the following program:
+    2a). A program to examine the behaviour of the following program:
 
 > There are two classes, A and B. Class A has a member which is a pointer pointing to Object B. This pointer is initialised in A's constructor. If A is destructed, what happened to B? 
 
-    2 b). A program implementing the Round-Robin selection of the element in an array, where the array is dynamically changing in each selection round. Values of the array can be 0 or 1. Only the next 1 is selected.
+    2b). A program implementing the Round-Robin selection of the element in an array, where the array is dynamically changing in each selection round. Values of the array can be 0 or 1.
+      Only the next 1 is selected.
 
 3. Study basic usage of gdb watchpoint.  
 
