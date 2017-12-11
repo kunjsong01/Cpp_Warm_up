@@ -47,7 +47,7 @@ Type Casting
 	| dynamic_cast        | Yes 	  | Yes  | Yes  |
 	| static_cast             | Yes   | Yes  | No	|
 	| reinterpret_cast    | No    | No   | No	|
-	| const_cast             | N/A   For constness conversion only	 |
+	| const_cast             | N/A   For constness conversion only | N/A   For constness conversion only | N/A   For constness conversion only | N/A   For constness conversion only |
 
 RTTI
 -------
@@ -95,7 +95,19 @@ Orders of constructor and destructor calling in Composition/ Inheritance
 
 Exception Handling
 -------
-* **#include &lt;stdexcept>** has runtime_error class which is derived from Standard Library class _exception_.
+* try, catch, throw
+** throw allows functions to specify its exception.
+** Handle any type of exception:   __catch (...) { // code to handle it here}__
+* C++ provides  __exception class__ Standard Library to make objects to be throw as exception.
+** include exception Standard Library and __inherit from exception__ to define new type of exceptions
+** __#include &lt;exception>__
+** Override the __virtual what() function__ to report what caused the exception
+* Program terminates abnormally if exception is thrown but not caught anywhere.
+* Exception specifier: deprecated. Restrict the type of exception a function can throw.
+> virtual const char* what() const throw() { return "An Exception!";}
+
+* Alternatively __runtime\_error class__: include stdexcept and inherit from runtime\_error to define new type of runtime\_error
+**__#include &lt;stdexcept>__ has runtime\_error class which is derived from Standard Library class _exception_ .
 
 Functions
 -------
