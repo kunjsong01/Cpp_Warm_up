@@ -21,8 +21,9 @@ Mini roadmap for C++ review:
 
 > There are two classes, A and B. Class A has a member which is a pointer pointing to Object B. This pointer is initialised in A's constructor. If A is destructed, what happened to B? 
 
-    2b). A program implementing the Round-Robin selection of the element in an array, where the array is dynamically changing in each selection round. Values of the array can be 0 or 1.
-      Only the next 1 is selected.
+    2b). A program implementing Round-Robin scheduling:  
+
+> The Round-Robin selection of the element in an array, where the array is dynamically changing in each selection round. Values of the array can be 0 or 1. Only the next 1 is selected.
 
 3. Study basic usage of gdb watchpoint.  
 
