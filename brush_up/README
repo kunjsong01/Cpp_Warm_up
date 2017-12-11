@@ -1,5 +1,8 @@
-A quick review on C++ that consists of two parts: 
+C++ review: 
 
-* brush up on C++ concepts, template, memory management, OOP behaviour (friend, inheritance, composition, constructor/destructor calling order .etc).
-* brush on STL, such as usage of container/vector, using iterator to loop container. 
+* Review on C++ concepts, template, memory management, OOP behaviour (friend, inheritance, composition, constructor/destructor calling order .etc).
+** See basic_review_notes.md
+
+* Review on STL, including container, iterator and vector. Using iterator to loop through container.  
+** See stl_review_notes.md
 
