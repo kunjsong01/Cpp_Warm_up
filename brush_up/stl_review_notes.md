@@ -28,9 +28,6 @@ STL provides advanced data structures and operations on them. Data structures in
 > vector&lt;int> V;
 > vector&lt; vector&lt;int> > V2; // avoid confused by ">>" operator, multi-dimensional vectors  
 
-* Some container classes has __begin()__ and __end()__ to return __forward order__ beginning and end iterators.
-* Some container classes has __rbegin()__ and __rend()__ to return __backward order__ beginning and end iterators.
-
 ## 1.1 vector
 * Vectors are dynamic arrays that can be resized. The memory is handled automatically by container.
 * Vector elements can be accessed by __reference operator []__ just like arrays.
@@ -54,13 +51,29 @@ STL provides advanced data structures and operations on them. Data structures in
 * Syntax:
 > vector&lt;type> V(size, value);
 
+* see experiment in /brush_up/cpp_stl/vector_experiment.cpp
+
 ## 1.2 deque
 * Skip
 ## 1.3 list
+* List or vector? Depending on the cost and benefits ... 
+| Data structure      | Insertion | random access | 
+| ------------------- |:-------------|:-------------| 
+| List       | Low cost | Slow |
+| Vector     | High cost | Fast | 
+
+* For both list and vector, do __NOT__ use size() to check if list is empty, since size() returns unsigned result. Use empty() to do it!
+* Popular functions:
+> pop_front(), pop_back(), sort(), reverse()
+* List support bidirectional iterator (++ / --), but does __NOT__ support random access iterator (binary + / - operator). 
+** Searching list requires O(n) time, because __random access iterator is not supported !__.
+
 ## 1.4 Associative Container
 ### 1.4.1 Set
 ### 1.4.2 Map
 ## 1.5 String
+* string class, *string a = \"This is a string\";*
+* It does NOT terminate with "\0". But if this was returned by c_str(), it will include the string terminator.
 ## 1.6 Rope
 * Skip
 ## 1.7 Container Adaptors
@@ -70,18 +83,43 @@ STL provides advanced data structures and operations on them. Data structures in
 * Skip
 
 ## 1.8 bitset
-
+* It optimises the memory such that each bit takes 1 bit only. (Think of it like a compressed array of 0s and 1s.)
+* size must be known at compile time, a constant. Size cannot be changed at runtime
+* Bit set starts indexing __backward__!
+* Works with operator [] (just like array)
+* Constructor takes string/array... etc
+* default construct initiates all bits 0
+* popular functions: set, reset, size, count, test
 
 # 2. Operations on Containers
 
 ## 2.1 Iterators
-* Iterator is a general way to access data stored in a container. 
+* Iterator is a general way to access data stored in a container class. 
 * Iterator can provide range checking
-* __reverse()__ function
-* To create an iterator object. append “__::iterator__”, “__::const_iterator__”, “__::reverse_iterator__” or “__::const_reverse_iterator__”  to container, e.g.:
+* Algorithms use iterators.
+* Some container classes has __begin()__ and __end()__ to return __forward order__ beginning and end iterators. (iterator returned by end() actually points to the theoretical terminating point)
+* Access the element by dereferencing the iterator with a *
+* To request an iterator object, append “__::iterator__”, “__::const_iterator__”, “__::reverse_iterator__” or “__::const_reverse_iterator__”  to container, e.g.:
 > vector&lt;int>::iterator
 
-* 
+** const iterator does not allow you change the content it's pointing to.
+** 
+
+* Some container classes has __rbegin()__ and __rend()__ to return __backward order__ beginning and end iterators.
+* The forward iterator can only moves one way, from first to last.
+* Types of iterators:
+	** Random access iterator: you can ++ or --, or do iterator arithmetic.
+	** Summary: 
+| Iterator      | Ability       | 
+| ------------------- |:-------------| 
+| Input iterator      | Read forward  | 
+| Output iterator     | Write forward |  
+| Forward iterator 	  | R/W forward   |
+| Bidirectional iterator 	  | R/W forward/bakcward   | 
+| Random Access iterator 	  | R/W with random access (i.e. itr arithmetic)   | 
+* No bound checking! could result in segmentation fault.
+* __reverse()__ function
+ 
 
 ## 2.2 Algorithms
 * find() and sort()
@@ -90,6 +128,3 @@ STL provides advanced data structures and operations on them. Data structures in
 
 ## 2.3 auto_ptr
 * Class to manage memory pointers and avoid memory leaks
-
-
-** __#include &lt;exception>__
