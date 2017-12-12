@@ -17,7 +17,8 @@ C++ STL Review
 - [2. Operations on Containers] (#heading-1)
     * [2.1 Iterators](#sub-heading)
     * [2.2 Algorithms](#sub-heading)
-    * [2.3 auto_ptr / unique_pointer (smart pointer)](#sub-heading)
+    * [2.3 auto_ptr / unique_pointer (smart pointer) ($)](#sub-heading)
+- [3. C++ value passing (including STL containers)] (#heading-2) 
 
 **C++ STL Review**
 ===========================================  
@@ -28,9 +29,9 @@ STL provides advanced data structures and operations on them. Data structures in
 
 | Declaration     | vect variable | Elements | 
 | ------------------- |:-------------|:-------------| 
-| vector<Type> vect;       | On stack | On heap (because dynamically allocated, resizable!) |
-| vector<Type> *vect = new vector<Type>;     | On heap | On heap | 
-| vector<Type*> vect;       | On Stack | Type* pointers on heap |
+| vector&lt;Type> vect;       | On stack | On heap (because dynamically allocated, resizable!) |
+| vector&lt;Type> *vect = new vector<Type>;     | On heap | On heap | 
+| vector&lt;Type*> vect;       | On Stack | Type* pointers on heap |
 
 <!-- toc -->
 
@@ -91,12 +92,22 @@ STL provides advanced data structures and operations on them. Data structures in
 ** Searching list requires O(n) time, because __random access iterator is not supported !__.
 
 ## 1.4 Associative Container
-### 1.4.1 Set
-### 1.4.2 Map ($)
+* Pair: 
+### 1.4.1 Set ($) / Multiset
+* Elements are not mutable, but can be inserted or removed. 
+* Automatically sorted
+* __No duplicates__
+    ** Use multiset to accommodate for duplicates
+* Use std::set::find instead of the generic find: std::find. It saves time. 
+
+### 1.4.2 Map ($) / Multimap
+* Like a dictionary, key-value pair
+* Not just number keys, can be string keys and any other data type
+* 
+
 ## 1.5 String
 * string class, *string a = \"This is a string\";*
 * It does NOT terminate with "\0". But if this was returned by c_str(), it will include the string terminator.
-
 ## 1.6 Rope
 * Skip
 
@@ -150,7 +161,7 @@ STL provides advanced data structures and operations on them. Data structures in
 * some functions takes iterator parameters
 * lower_bound() to find the first appearance of a thing in a sorted vector
 
-## 2.3 auto_ptr / unique_pointer (smart pointer)
+## 2.3 auto_ptr / unique_pointer (smart pointer) ($)
 * Deprecated. Now using smart pointer (unique_pointer)?
 
 # 3. C++ value passing (including STL containers)

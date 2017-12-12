@@ -13,7 +13,8 @@ C++ review
 - [11. OOP in C++] (#heading-10)
 - [12. Friends and Inheritance] (#heading-11)
 - [13. Operator Overloading] (#heading-12)
-- [14. Miscellaneous] (#heading-13)
+- [14. Move Semantics, RValue reference] (#heading-13)
+- [15. Miscellaneous] (#heading-14)
 
 **C++ Review**
 ===========================================  
@@ -210,7 +211,19 @@ Connecting function call to function body.
 * conversion operator can also be overloaded, e.g. **operator float() {}**
 * Unary and binary operator are both 'overloadable'. But not all operators can be overloaded
 
-# 14. Miscellaneous
+# 14. Move Semantics, RValue reference
+C++11
+
+* Move: 
+	1. to avoid memory allocation for temporary object when returning an object from a function
+	2. used to move unique_ptr into container.
+	3. Move relies on rvalue reference. 
+* A bit more on terminology: 
+** lvalue takes permanent memory. You can assign value to it. lvalue can take reference
+** rvalue does not take reference. rvalues refer to temporary objects. (But in C++11, there is a "rvalue reference")
+** string&& str, this is a mutable rvalue reference
+
+# 15. Miscellaneous
 1. Unary scope resolution operator **::** usage: 
 * Access global variable that was defined in file scope
 * Out-of-line member function definition
@@ -236,4 +249,12 @@ Connecting function call to function body.
 11. **const** at the end of function declaration, e.g. Class A has "void Foo() const {}", one cannot change class members inside Foo, unless prefix the aMember declaration with **mutable** keyword, "mutable int aMember;". I.e. "this" becomes const inside Foo().
 12. Check types: **#inclde &lt;typeinfo>**, function **if (typeid(a) == typeid(b)) {...}**
 * __typeid(a).name()__ returns details
+13. keyword auto: automatic storage duration, type inference "auto d = 5.0;" then d is a double.
+14. Predicate (used by some STL algorithms): 
+	* unary predicate: function that return a bool and takes only __one__ input
+	* binary predicate: function that return a bool and takes only __two__ inputs
+15. Functor (used by some STL algorithms): 
+	* https://www.youtube.com/watch?v=fD0Sykh3vPs
+	* a struct that overloads the function call operator "__()__" 
+
 
