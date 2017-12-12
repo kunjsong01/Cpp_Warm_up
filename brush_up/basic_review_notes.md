@@ -65,9 +65,11 @@ C++03
 	| const_cast             | N/A   For constness conversion only | N/A   For constness conversion only | N/A   For constness conversion only | N/A   For constness conversion only |
 
 # 4. RTTI
-* Run-Time Type Info
+* Run-Time Type Info for type conversion in the inheritance hierachy
+* often used with typeid() operator. 
 * Only available for classes that have at least one virtual function. Otherwise gives runtime error (though compilation works fine)
 * Used by dynamic_cast
+** dynamic_cast is converting a pointer pointing to an object to a pointer to an derived object in the inheritance hierachy.
 
 # 5. Template
 Fundamentally it is Compile time code generation...
