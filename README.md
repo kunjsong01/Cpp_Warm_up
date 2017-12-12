@@ -15,16 +15,14 @@ Mini roadmap for C++ review:
         * Mixed usage of class and function tempalte.
         * ...etc
 
-2. The *remaining_question* folder has two experiment programs
-
-    * 2a) A program to examine the behaviour of the following program
-
-> There are two classes, A and B. Class A has a member which is a pointer pointing to Object B. This pointer is initialised in A's constructor. If A is destructed, what happened to B? 
-
-
-    * 2b) A program implementing Round-Robin scheduling  
-
-> The Round-Robin selection of the element in an array, where the array is dynamically changing in each selection round. Values of the array can be 0 or 1. Only the next 1 is selected.
+2. The *remaining_question* folder has three exercises: 
+    * bit extraction
+        ** Two methods: One is primitive function using mask, and the other one is implemneted using C++ STL bitset object.
+    * string reverse
+        ** Two methods: One is primitive function using purely pointers, and the other one is implemented using C++ string object and reverse iterators.
+    * Selective Round-Robin scheduling:
+        ** Just a primitive method demonstrating the algorithm here.
+        ** TO-DO: presumably replace the array using bitset, and use, again, iterators.
 
 3. Study basic usage of gdb watchpoint.  
 
