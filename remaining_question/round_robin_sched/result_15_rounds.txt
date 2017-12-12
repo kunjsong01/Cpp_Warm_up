@@ -1,0 +1,67 @@
+Initial array: 
+1 1 1 1 1 
+=== Round: 0===
+0 0 0 1 1 
+Selected index: 3
+Selected value: 1
+=== Round: 1===
+1 1 1 0 0 
+Selected index: 0
+Selected value: 1
+=== Round: 2===
+1 0 1 1 0 
+Selected index: 2
+Selected value: 1
+=== Round: 3===
+0 0 0 1 1 
+Selected index: 3
+Selected value: 1
+=== Round: 4===
+0 0 0 0 1 
+Selected index: 4
+Selected value: 1
+=== Round: 5===
+0 0 1 1 0 
+Selected index: 2
+Selected value: 1
+=== Round: 6===
+0 1 1 0 1 
+Selected index: 4
+Selected value: 1
+=== Round: 7===
+0 0 0 0 0 
+Selected index: 4
+Selected value: 0
+=== Round: 8===
+0 1 0 1 0 
+Selected index: 1
+Selected value: 1
+=== Round: 9===
+0 1 0 1 0 
+Selected index: 3
+Selected value: 1
+=== Round: 10===
+0 0 1 1 1 
+Selected index: 4
+Selected value: 1
+=== Round: 11===
+1 1 1 1 0 
+Selected index: 0
+Selected value: 1
+=== Round: 12===
+1 1 0 1 0 
+Selected index: 1
+Selected value: 1
+=== Round: 13===
+0 0 1 1 0 
+Selected index: 2
+Selected value: 1
+=== Round: 14===
+1 0 0 0 0 
+Selected index: 0
+Selected value: 1
+=== Round: 15===
+1 0 1 0 0 
+Selected index: 2
+Selected value: 1
+END
