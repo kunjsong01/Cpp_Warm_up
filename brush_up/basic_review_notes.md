@@ -1,19 +1,19 @@
 C++ review
 
 - [1. Storage Duration (Automatic, Static and Dynamic Memory)] (#heading)
-- [2. Struct vs. Class] (#heading)
-- [3. Type Casting] (#heading)
-- [4. RTTI] (#heading)
-- [5. Template] (#heading)
-- [6. Binding] (#heading)
-- [7. Virtual Destructor] (#heading)
-- [8. Orders of constructor and destructor calling in Composition/ Inheritance] (#heading)
-- [9. Exception Handling] (#heading)
-- [10. Functions] (#heading)
-- [11. OOP in C++] (#heading)
-- [12. Friends and Inheritance] (#heading)
-- [13. Operator Overloading] (#heading)
-- [14. Miscellaneous] (#heading)
+- [2. Struct vs. Class] (#heading-1)
+- [3. Type Casting] (#heading-2)
+- [4. RTTI] (#heading-3)
+- [5. Template] (#heading-4)
+- [6. Binding] (#heading-5)
+- [7. Virtual Destructor] (#heading-6)
+- [8. Orders of constructor and destructor calling in Composition/ Inheritance] (#heading-7)
+- [9. Exception Handling] (#heading-8)
+- [10. Functions] (#heading-9)
+- [11. OOP in C++] (#heading-10)
+- [12. Friends and Inheritance] (#heading-11)
+- [13. Operator Overloading] (#heading-12)
+- [14. Miscellaneous] (#heading-13)
 
 **C++ Review**
 ===========================================  

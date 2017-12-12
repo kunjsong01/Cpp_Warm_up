@@ -14,7 +14,7 @@ C++ STL Review
     	+ [1.7.2 queue (1%)](#sub-sub-heading)
     	+ [1.7.3 priority_queue (1%)](#sub-sub-heading)
     * [1.8 bitset (1%)](#sub-heading)
-- [2. Operations on Containers] (#heading)
+- [2. Operations on Containers] (#heading-1)
     * [2.1 Iterators](#sub-heading)
     * [2.2 Algorithms](#sub-heading)
     * [2.3 auto_ptr / unique_pointer (smart pointer)](#sub-heading)
