@@ -116,6 +116,7 @@ STL provides advanced data structures and operations on them. Data structures in
 * Types of iterators:
 	** Random access iterator: you can ++ or --, or do iterator arithmetic.
 	** Summary: 
+
 | Iterator      | Ability       | 
 | ------------------- |:-------------| 
 | Input iterator      | Read forward  | 
@@ -123,8 +124,8 @@ STL provides advanced data structures and operations on them. Data structures in
 | Forward iterator 	  | R/W forward   |
 | Bidirectional iterator 	  | R/W forward/bakcward   | 
 | Random Access iterator 	  | R/W with random access (i.e. itr arithmetic)   | 
+
 * No bound checking! could result in segmentation fault.
-* __reverse()__ function
 
 ## 2.2 Algorithms
 * find() and sort()
