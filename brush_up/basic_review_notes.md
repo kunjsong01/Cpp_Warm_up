@@ -1,3 +1,4 @@
+C++ review
 
 - [1. Storage Duration (Automatic, Static and Dynamic Memory)] (#heading)
 - [2. Struct vs. Class] (#heading)
@@ -5,6 +6,7 @@
 - [4. RTTI] (#heading)
 - [5. Template] (#heading)
 - [6. Binding] (#heading)
+- [7. Virtual Destructor] (#heading)
 - [8. Orders of constructor and destructor calling in Composition/ Inheritance] (#heading)
 - [9. Exception Handling] (#heading)
 - [10. Functions] (#heading)
