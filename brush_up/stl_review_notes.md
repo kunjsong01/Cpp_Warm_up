@@ -5,14 +5,14 @@ C++ STL Review
     * [1.2 deque ($)](#sub-heading)
     * [1.3 list (1%)](#sub-heading)
     * [1.4 Associative Container](#sub-heading)
-    	+ [1.4.1 Set ($)](#sub-sub-heading)
-    	+ [1.4.2 Map ($)](#sub-sub-heading)
+        + [1.4.1 Set ($)](#sub-sub-heading)
+        + [1.4.2 Map ($)](#sub-sub-heading)
     * [1.5 String](#sub-heading)
     * [1.6 Rope (1%)](#sub-heading)
     * [1.7 Container Adaptators](#sub-heading)
         + [1.7.1 stack (1%)](#sub-sub-heading)
-    	+ [1.7.2 queue (1%)](#sub-sub-heading)
-    	+ [1.7.3 priority_queue (1%)](#sub-sub-heading)
+        + [1.7.2 queue (1%)](#sub-sub-heading)
+        + [1.7.3 priority_queue (1%)](#sub-sub-heading)
     * [1.8 bitset (1%)](#sub-heading)
 - [2. Operations on Containers] (#heading-1)
     * [2.1 Iterators](#sub-heading)
@@ -23,6 +23,14 @@ C++ STL Review
 ===========================================  
 
 STL provides advanced data structures and operations on them. Data structures instances are like list, map, vector, string ... etc. Operations are like iterators, algorithms ...etc.
+
+* Container memory allocation:
+
+| Declaration     | vect variable | Elements | 
+| ------------------- |:-------------|:-------------| 
+| vector<Type> vect;       | On stack | On heap (because dynamically allocated, resizable!) |
+| vector<Type> *vect = new vector<Type>;     | On heap | On heap | 
+| vector<Type*> vect;       | On Stack | Type* pointers on heap |
 
 <!-- toc -->
 
@@ -54,10 +62,20 @@ STL provides advanced data structures and operations on them. Data structures in
 * Syntax:
 > vector&lt;type> V(size, value);
 
+* capacity(): returns the size of memory allocation in terms of elements. It can be equal or greater than the actual size of vector (allowing to accommodate for additional members in future). 
 * see experiment in /brush_up/cpp_stl/vector_experiment.cpp
 
 ## 1.2 deque ($)
+* Double Ended Queue
+* push_back/front(value), pop_back/front(value), insert(itr, value), erase(itr)
+* __Difference between vector and deque and vector:__
 
+| Data structure      | Contiguous Memory? | 
+| ------------------- |:-------------| 
+| deque       | No |
+| vector     | Yes | 
+
+* A large vector may cause fragmentation since it has contiguous memory
 
 ## 1.3 list (1%)
 * List or vector? Depending on the cost and benefits ... 
@@ -114,16 +132,16 @@ STL provides advanced data structures and operations on them. Data structures in
 * Some container classes has __rbegin()__ and __rend()__ to return __backward order__ beginning and end iterators.
 * The forward iterator can only moves one way, from first to last.
 * Types of iterators:
-	** Random access iterator: you can ++ or --, or do iterator arithmetic.
-	** Summary: 
+    ** Random access iterator: you can ++ or --, or do iterator arithmetic.
+    ** Summary: 
 
 | Iterator      | Ability       | 
 | ------------------- |:-------------| 
 | Input iterator      | Read forward  | 
 | Output iterator     | Write forward |  
-| Forward iterator 	  | R/W forward   |
-| Bidirectional iterator 	  | R/W forward/bakcward   | 
-| Random Access iterator 	  | R/W with random access (i.e. itr arithmetic)   | 
+| Forward iterator    | R/W forward   |
+| Bidirectional iterator      | R/W forward/bakcward   | 
+| Random Access iterator      | R/W with random access (i.e. itr arithmetic)   | 
 
 * No bound checking! could result in segmentation fault.
 
@@ -134,3 +152,11 @@ STL provides advanced data structures and operations on them. Data structures in
 
 ## 2.3 auto_ptr / unique_pointer (smart pointer)
 * Deprecated. Now using smart pointer (unique_pointer)?
+
+# 3. C++ value passing (including STL containers)
+
+| Data structure      | By Default (i.e. Foo(type v)) | 
+| ------------------- |:-------------|
+| Array       | pass-by-reference |
+| Object      | pass-by-value |
+| Container data structure (same as object)      | pass-by-value (but please do it using pass-by-reference to avoid the overhead) |
