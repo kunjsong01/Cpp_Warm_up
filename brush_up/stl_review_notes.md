@@ -1,34 +1,37 @@
 C++ STL Review
-1. Container classes
-1.1 vector
-1.2 deque
-1.3 list
-1.4 Associative Container
-1.4.1 Set
-1.4.2 Map
-1.5 String
-1.6 Rope
-1.7 Container Adaptators
-1.7.1 stack
-1.7.2 queue
-1.7.2 priority_queue
-1.8 bitset
-2. Operations on Containers
-2.1 Iterators
-2.2 Algorithms
-2.3 auto_ptr
+
+- [1. Container classes] (#heading)
+    * [1.1 vector ($)](#sub-heading)
+    * [1.2 deque ($)](#sub-heading)
+    * [1.3 list (1%)](#sub-heading)
+    * [1.4 Associative Container](#sub-heading)
+    	+ [1.4.1 Set ($)](#sub-sub-heading)
+    	+ [1.4.2 Map ($)](#sub-sub-heading)
+    * [1.5 String](#sub-heading)
+    * [1.6 Rope (1%)](#sub-heading)
+    * [1.7 Container Adaptators](#sub-heading)
+        + [1.7.1 stack (1%)](#sub-sub-heading)
+    	+ [1.7.2 queue (1%)](#sub-sub-heading)
+    	+ [1.7.3 priority_queue (1%)](#sub-sub-heading)
+    * [1.8 bitset (1%)](#sub-heading)
+- [2. Operations on Containers] (#heading)
+    * [2.1 Iterators](#sub-heading)
+    * [2.2 Algorithms](#sub-heading)
+    * [2.3 auto_ptr / unique_pointer (smart pointer)](#sub-heading)
 
 **C++ STL Review**
 ===========================================  
 
 STL provides advanced data structures and operations on them. Data structures instances are like list, map, vector, string ... etc. Operations are like iterators, algorithms ...etc.
 
+<!-- toc -->
+
 # 1. Container classes
 * Type of the container is specified by the template parameter, e.g. 
 > vector&lt;int> V;
 > vector&lt; vector&lt;int> > V2; // avoid confused by ">>" operator, multi-dimensional vectors  
 
-## 1.1 vector
+## 1.1 vector ($)
 * Vectors are dynamic arrays that can be resized. The memory is handled automatically by container.
 * Vector elements can be accessed by __reference operator []__ just like arrays.
 * The memory is also contiguous so that they can be accessed and traversed by iterators. 
@@ -53,9 +56,10 @@ STL provides advanced data structures and operations on them. Data structures in
 
 * see experiment in /brush_up/cpp_stl/vector_experiment.cpp
 
-## 1.2 deque
-* Skip
-## 1.3 list
+## 1.2 deque ($)
+
+
+## 1.3 list (1%)
 * List or vector? Depending on the cost and benefits ... 
 | Data structure      | Insertion | random access | 
 | ------------------- |:-------------|:-------------| 
@@ -70,16 +74,18 @@ STL provides advanced data structures and operations on them. Data structures in
 
 ## 1.4 Associative Container
 ### 1.4.1 Set
-### 1.4.2 Map
+### 1.4.2 Map ($)
 ## 1.5 String
 * string class, *string a = \"This is a string\";*
 * It does NOT terminate with "\0". But if this was returned by c_str(), it will include the string terminator.
+
 ## 1.6 Rope
 * Skip
+
 ## 1.7 Container Adaptors
 ### 1.7.1 stack
 ### 1.7.2 queue
-### 1.7.2 priority_queue
+### 1.7.3 priority_queue
 * Skip
 
 ## 1.8 bitset
@@ -119,12 +125,11 @@ STL provides advanced data structures and operations on them. Data structures in
 | Random Access iterator 	  | R/W with random access (i.e. itr arithmetic)   | 
 * No bound checking! could result in segmentation fault.
 * __reverse()__ function
- 
 
 ## 2.2 Algorithms
 * find() and sort()
 * some functions takes iterator parameters
-* lower_bound() to find the first appearance of a thing
+* lower_bound() to find the first appearance of a thing in a sorted vector
 
-## 2.3 auto_ptr
-* Class to manage memory pointers and avoid memory leaks
+## 2.3 auto_ptr / unique_pointer (smart pointer)
+* Deprecated. Now using smart pointer (unique_pointer)?
