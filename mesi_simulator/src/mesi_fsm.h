@@ -8,15 +8,15 @@
 #ifndef MESI_FSM_H_
 #define MESI_FSM_H_
 
-#include "cache_line.h"
-#include "state.h"
+#include "cache.h"
+#include "request.h"
 
 class State {
 	public:
 		// operations in this state
 		virtual void operation(CacheLine *cl) {};
 		// this will be used polymorphically, i.e. base class reference for derived class object
-		// hence delete polymorphically
+		// hence  polymorphically
 		virtual ~State() {};
 };
 

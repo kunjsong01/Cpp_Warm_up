@@ -10,11 +10,13 @@ using namespace std;
 #include "mesi_fsm.h"
 
 int main() {
-	cout << "Hello world" << endl; // prints
 
-	Modified m;
-	CacheLine cl(&m);
-	cl.stateOperation();
+	cout << "Cache Coherence MESI simulator" << endl;
+
+	// Initialise components
+	LevelTwoCache l2_cache;
+
+	// test L1 cache and cores
 
 	return 0;
 }

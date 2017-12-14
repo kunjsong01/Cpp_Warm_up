@@ -11,28 +11,36 @@
 
 using namespace std;
 
-// Protocol implementation of Modified
+/*
+ * Protocol implementation of Modified state
+ */
 Modified::~Modified() { }
 
 void Modified::operation(CacheLine *cl) {
 	cout << "End line" << endl;
 }
 
-// Protocol implementation of Exclusive
+/*
+ * Protocol implementation of Exclusive state
+ */
 Exclusive::~Exclusive() { }
 
 void Exclusive::operation(CacheLine *cl) {
 
 }
 
-// Protocol implementation of Shared
+/*
+ * Protocol implementation of Shared state
+ */
 Shared::~Shared() { }
 
 void Shared::operation(CacheLine *cl) {
 
 }
 
-// Protocol implementation of Invalid
+/*
+ * Protocol implementation of Invalid state
+ */
 Invalid::~Invalid() { }
 
 void Invalid::operation(CacheLine *cl) {

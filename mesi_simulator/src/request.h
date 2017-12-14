@@ -5,8 +5,8 @@
  *      Author: kunson01
  */
 
-#ifndef STATE_H_
-#define STATE_H_
+#ifndef REQUEST_H_
+#define REQUEST_H_
 
 // processor request enum
 typedef enum {
@@ -23,4 +23,4 @@ typedef enum {
 	FlushOpt
 } BusRequest;
 
-#endif /* STATE_H_ */
+#endif /* REQUEST_H_ */
