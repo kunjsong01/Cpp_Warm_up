@@ -80,6 +80,7 @@ STL provides advanced data structures and operations on them. Data structures in
 
 ## 1.3 list (1%)
 * List or vector? Depending on the cost and benefits ... 
+
 | Data structure      | Insertion | random access | 
 | ------------------- |:-------------|:-------------| 
 | List       | Low cost | Slow |
