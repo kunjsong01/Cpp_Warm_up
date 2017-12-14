@@ -14,9 +14,7 @@ int main() {
 	cout << "Cache Coherence MESI simulator" << endl;
 
 	// Initialise components
-	LevelTwoCache l2_cache;
-
-	// test L1 cache and cores
+	LevelTwoCache l2_cach;
 
 	return 0;
 }

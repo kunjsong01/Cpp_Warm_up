@@ -6,12 +6,12 @@
  *      Author: kunson01
  */
 
-#ifndef CACHE_H_
-#define CACHE_H_
+#ifndef PROCESSOR_CACHE_H_
+#define PROCESSOR_CACHE_H_
 
 #include <vector>
-
 #include "request.h"
+#include "simulator.h"
 
 using namespace std;
 
@@ -28,9 +28,6 @@ class CacheLine {
 	friend class LevelTwoCache;
 	private:
 		State *currentState;
-		// state handles two types of request
-		ProcessorRequest prReq;
-		BusRequest busReq;
 		int tag;
 		int data;
 	public:
@@ -41,7 +38,7 @@ class CacheLine {
 
 
 /*
- * Level one cache: here we just model it to be a vector
+ * Level one data cache: here we just model it to be a vector
  * which holds a bunch of cache line objects.
  * Maximum cache size is 5.
  * Assumption:
@@ -63,9 +60,9 @@ class LevelOneCache {
 		void lruDelete();
 		void addCacheLineOnMiss(int _tag, LevelTwoCache l2cache);
 
-		void processPrRequest();
-		void processBusRequest();
-		void putRequestOnBus();
+		void processPrRequest(ProcessorRequest prReq);
+		void processBusRequest(BusRequest busReq);
+		void putRequestOnBus(BusRequest busReq);
 };
 
 /*
@@ -73,7 +70,7 @@ class LevelOneCache {
  * which holds a bunch of cache line objects.
  * Maximum cache size is 20.
  * Assumption:
- * 	1. In order to simply the bus modelling, let's do a logical link
+ * 	1. In order to simplify the bus modelling, let's do a logical link
  * 	   between L1d and L2. If a cache miss occurs in L1d, let L1d quiry L2
  * 	   to get the requested cache line.
  */
@@ -93,4 +90,35 @@ class LevelTwoCache {
 		LevelTwoCache();
 };
 
-#endif /* CACHE_H_ */
+/*
+ * Processor class that send PrWr and PrRd request to its cache.
+ * To generate a PrWr request, the processor issues a command "store X value", where X
+ * is the cache line tag and value the the new value to be written into that
+ * cache line.
+ * To generate a PrRd request, the processor issues a command "load X" to indicate its read
+ * intention.
+ *
+ * For simulation purpose, a processor is set to be one of the two roles, "changeInitiator" or "changeFollower",
+ * in each clock cycle.
+ *
+ * A "changeInitiator" is the processor that issues a read or write operation to its L1d cache which in turn puts a
+ * new bus request on the bus.
+ *
+ * A "changeFollower" is the processor that sniffs the bus request a "changeInitiator" put on the bus. Its own L1d cache, a
+ * snoopy cache, will update the cache lines accordingly.
+ *
+ * Assumption:
+ * 	1. the processor is a single cycle machine, i.e. it completes a read or write operation in one cycle.
+ */
+
+class Processor {
+	private:
+		LevelOneCache cache;
+		ProcessorRole role;
+
+	public:
+		void readCacheLine();
+		void writeCacheLine();
+};
+
+#endif /* PROCESSOR_CACHE_H_ */

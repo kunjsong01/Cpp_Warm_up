@@ -5,9 +5,9 @@
  *      Author: kunson01
  */
 #include <iostream>
-#include "mesi_fsm.h"
 #include <stddef.h>
-#include "cache.h"
+#include "mesi_fsm.h"
+#include "processor_cache.h"
 #include "request.h"
 
 using namespace std;
@@ -53,16 +53,16 @@ void LevelOneCache::addCacheLineOnMiss(int _tag, LevelTwoCache nextLevel) {
 	this->dataStore.push_back(nextLevel.returnCacheLine(_tag));
 }
 
-void LevelOneCache::processPrRequest() {
+void LevelOneCache::processPrRequest(ProcessorRequest prReq) {
 
 
 }
 
-void LevelOneCache::processBusRequest() {
+void LevelOneCache::processBusRequest(BusRequest busReq) {
 
 }
 
-void LevelOneCache::putRequestOnBus() {
+void LevelOneCache::putRequestOnBus(BusRequest busReq) {
 
 }
 
@@ -76,8 +76,6 @@ LevelTwoCache::LevelTwoCache() {
 	}
 
 	cout << "Size of L2 cache: " << this->dataStore.size() << endl;
-
-	this->returnCacheLine(19);
 }
 
 CacheLine LevelTwoCache::returnCacheLine(int _tag) {
@@ -85,14 +83,10 @@ CacheLine LevelTwoCache::returnCacheLine(int _tag) {
 	// ********* TO-DO: add tag checking here, if tag not recognized *************
 	this->storeItr = this->dataStore.begin();
 	for (; this->storeItr != this->dataStore.end(); ++this->storeItr) {
-		cout << "This is tag: " << this->storeItr->tag << endl;
-		cout << "This is tag: " << this->storeItr->data << endl;
 		// break on the matching cache line
 		if ((this->storeItr->tag) == _tag) {
 			break;
 		};
 	}
-
 	return *(this->storeItr);
 }
-

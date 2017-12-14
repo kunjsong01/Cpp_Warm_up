@@ -1,5 +1,5 @@
 /*
- * state.h
+ * request.h
  *
  *  Created on: 14 Dec 2017
  *      Author: kunson01
@@ -10,17 +10,17 @@
 
 // processor request enum
 typedef enum {
-	PrRd = 0,
-	PrWr
+	Pr_Rd = 0,
+	Pr_Wr
 } ProcessorRequest;
 
 // bus request enum
 typedef enum {
-	BusRd = 0,
-	BusRdx,
-	BusUpgr,
+	Bus_Rd = 0,
+	Bus_Rdx,
+	Bus_Upgr,
 	Flush,
-	FlushOpt
+	Flush_Opt
 } BusRequest;
 
 #endif /* REQUEST_H_ */

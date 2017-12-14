@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-
 #include "mesi_fsm.h"
 
 using namespace std;

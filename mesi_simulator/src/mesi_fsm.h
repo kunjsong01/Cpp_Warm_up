@@ -8,7 +8,7 @@
 #ifndef MESI_FSM_H_
 #define MESI_FSM_H_
 
-#include "cache.h"
+#include "processor_cache.h"
 #include "request.h"
 
 class State {
