@@ -4,7 +4,6 @@ Mini roadmap for C++ review:
 --------
 
 1. C++ review: 
---------
 
     * Review on C++ concepts, template, memory management, OOP behaviour (friend, inheritance, composition, constructor/destructor calling order .etc).
         ** See basic_review_notes.md
@@ -18,7 +17,7 @@ Mini roadmap for C++ review:
         * ...etc
 
 2. The *remaining_question* folder has three exercises: 
---------
+
     * bit extraction
         ** Two methods: One is primitive function using mask, and the other one is implemneted using C++ STL bitset object.
     * string reverse
@@ -28,6 +27,8 @@ Mini roadmap for C++ review:
         ** TO-DO: presumably replace the array using bitset, and use, again, iterators.
 
 3. Study basic usage of gdb watchpoint.  
---------
+
+
+4. Mini-project: MESI simulator  
 
 
