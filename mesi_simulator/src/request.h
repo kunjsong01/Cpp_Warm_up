@@ -10,17 +10,17 @@
 
 // processor request enum
 typedef enum {
-	Pr_Rd = 0,
-	Pr_Wr
+	PrRd = 0,
+	PrWr
 } ProcessorRequest;
 
 // bus request enum
 typedef enum {
-	Bus_Rd = 0,
-	Bus_Rdx,
-	Bus_Upgr,
+	BusRd = 0,
+	BusRdx,
+	BusUpgr,
 	Flush,
-	Flush_Opt
+	FlushOpt
 } BusRequest;
 
 #endif /* REQUEST_H_ */

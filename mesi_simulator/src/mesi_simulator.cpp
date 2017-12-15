@@ -13,8 +13,11 @@ int main() {
 
 	cout << "Cache Coherence MESI simulator" << endl;
 
-	// Initialise components
-	LevelTwoCache l2_cach;
+	// Create components
+	LevelTwoCache l2_cache;
+	Processor P1(Change_Initiator, &l2_cache);
+
+	P1.readCacheLine(3);
 
 	return 0;
 }

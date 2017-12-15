@@ -17,6 +17,7 @@ using namespace std;
 
 class State;
 class LevelTwoCache;
+class LevelOneCache;
 
 /*
  * Cache line class that models each cace line
@@ -25,6 +26,7 @@ class LevelTwoCache;
  * 		State-Tag-Data. Access is purely based on Tag.
  */
 class CacheLine {
+	friend class LevelOneCache;
 	friend class LevelTwoCache;
 	private:
 		State *currentState;
@@ -45,24 +47,33 @@ class CacheLine {
  * 	1. Cache retention policy is LRU, i.e. always pop_front in the vector
  * 	2. No tag store, the tag is inside the line itself.
  * 	3. This is a snoopy cache that performs bus sniffing.
- * 	   The snooper is just modelled as a function to get bus request and analyse it
+ * 	   The snooper is just modelled as a function to get bus request and process it
+ * 	4. For the sake of design simplicity, the tag store is modelled here. It just simply traverses all
+ * 	   cache lines and compare the tag with the requested one.
  */
 class LevelOneCache {
 
-	// Processor and bus can access it
+	// Processor (and bus?) can access it
+	friend class Processor;
 
 	private:
 		vector<CacheLine> dataStore;
 		vector<CacheLine>::iterator storeItr;
 		int maxSize = 5;
-		int storeCounter = 0;
+		int itrShift = 0;
+		// pointer to next level cache, i.e. the L2 cache
+		LevelTwoCache *l2cache;
 
 		void lruDelete();
-		void addCacheLineOnMiss(int _tag, LevelTwoCache l2cache);
+		void addCacheLineOnMiss(int _tag, LevelTwoCache *l2cache);
 
-		void processPrRequest(ProcessorRequest prReq);
+		bool searchTagStore(int tag);
+		void processPrRequest(ProcessorRequest prReq, int tag, int value);
 		void processBusRequest(BusRequest busReq);
 		void putRequestOnBus(BusRequest busReq);
+
+	public:
+		LevelOneCache(LevelTwoCache *_l2cache);
 };
 
 /*
@@ -113,12 +124,13 @@ class LevelTwoCache {
 
 class Processor {
 	private:
-		LevelOneCache cache;
+		LevelOneCache lOneCache;
 		ProcessorRole role;
 
 	public:
-		void readCacheLine();
-		void writeCacheLine();
+		Processor(ProcessorRole _role, LevelTwoCache *l2cache);
+		void readCacheLine(int tag);
+		void writeCacheLine(ProcessorRequest prReq, int tag, int value);
 };
 
 #endif /* PROCESSOR_CACHE_H_ */
