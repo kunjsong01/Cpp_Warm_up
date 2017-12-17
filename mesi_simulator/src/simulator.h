@@ -9,8 +9,8 @@
 #define SIMULATOR_H_
 
 typedef enum {
-	Change_Initiator=0,
-	Change_Follower
+	Initiator=0,
+	Follower
 } ProcessorRole;
 
 #endif /* SIMULATOR_H_ */

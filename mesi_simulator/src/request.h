@@ -23,4 +23,10 @@ typedef enum {
 	FlushOpt
 } BusRequest;
 
+// request group
+typedef enum {
+	Local=0, // processor local request for a cache line
+	Remote // bus request for a cache line
+} Request;
+
 #endif /* REQUEST_H_ */

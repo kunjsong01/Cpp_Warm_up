@@ -14,17 +14,48 @@ using namespace std;
  * Protocol implementation of Modified state
  */
 Modified::~Modified() { }
+Modified::Modified() {
+	this->StateName = "Modified";
+}
 
-void Modified::operation(CacheLine *cl) {
-	cout << "End line" << endl;
+void Modified::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
+	// now processing the PrRequest
+	switch(stimulus) {
+		case PrRd:
+			// no state change for local read in modified state
+			break;
+		case PrWr:
+			break;
+		default:
+			cout << " Cache Line: Unknown stimulus in Modified state!" << endl;
+	}
+}
+
+void Modified::remoteOperation(BusRequest stimulus, CacheLine *cl) {
+
 }
 
 /*
  * Protocol implementation of Exclusive state
  */
-Exclusive::~Exclusive() { }
+Exclusive::~Exclusive() { cout << "In exclusive: destroying " << endl;}
+Exclusive::Exclusive() {
+	//this->StateName = "Exclusive";
+}
 
-void Exclusive::operation(CacheLine *cl) {
+void Exclusive::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
+	switch(stimulus) {
+		case PrRd:
+			// no state change for local read in modified state
+			break;
+		case PrWr:
+			break;
+		default:
+			cout << " Cache Line: Unknown stimulus in Modified state" << endl;
+	}
+}
+
+void Exclusive::remoteOperation(BusRequest stimulus, CacheLine *cl) {
 
 }
 
@@ -32,8 +63,23 @@ void Exclusive::operation(CacheLine *cl) {
  * Protocol implementation of Shared state
  */
 Shared::~Shared() { }
+Shared::Shared() {
+	this->StateName = "Shared";
+}
 
-void Shared::operation(CacheLine *cl) {
+void Shared::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
+	switch(stimulus) {
+		case PrRd:
+			// no state change for local read in modified state
+			break;
+		case PrWr:
+			break;
+		default:
+			cout << " Cache Line: Unknown stimulus in Modified state" << endl;
+	}
+}
+
+void Shared::remoteOperation(BusRequest stimulus, CacheLine *cl) {
 
 }
 
@@ -42,7 +88,19 @@ void Shared::operation(CacheLine *cl) {
  */
 Invalid::~Invalid() { }
 
-void Invalid::operation(CacheLine *cl) {
+void Invalid::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
+	switch(stimulus) {
+		case PrRd:
+			// no state change for local read in modified state
+			break;
+		case PrWr:
+			break;
+		default:
+			cout << " Cache Line: Unknown stimulus in Modified state" << endl;
+	}
+}
+
+void Invalid::remoteOperation(BusRequest stimulus, CacheLine *cl) {
 
 }
 

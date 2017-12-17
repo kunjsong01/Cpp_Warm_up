@@ -6,10 +6,13 @@
  *      Author: kunson01
  */
 
-#ifndef PROCESSOR_CACHE_H_
-#define PROCESSOR_CACHE_H_
+#ifndef COMPONENTS_H_
+#define COMPONENTS_H_
 
 #include <vector>
+#include <string>
+
+#include "component_fsm.h"
 #include "request.h"
 #include "simulator.h"
 
@@ -18,6 +21,8 @@ using namespace std;
 class State;
 class LevelTwoCache;
 class LevelOneCache;
+class Processor;
+class SimExecutor;
 
 /*
  * Cache line class that models each cace line
@@ -28,6 +33,8 @@ class LevelOneCache;
 class CacheLine {
 	friend class LevelOneCache;
 	friend class LevelTwoCache;
+	friend class SimExecutor;
+
 	private:
 		State *currentState;
 		int tag;
@@ -35,9 +42,8 @@ class CacheLine {
 	public:
 		CacheLine( int _tag, int _data);
 		void setState( State *state);
-		void stateOperation();
+		void stateOperation(Request request, ProcessorRequest prRqst, BusRequest busRqst);
 };
-
 
 /*
  * Level one data cache: here we just model it to be a vector
@@ -55,6 +61,7 @@ class LevelOneCache {
 
 	// Processor (and bus?) can access it
 	friend class Processor;
+	friend class SimExecutor;
 
 	private:
 		vector<CacheLine> dataStore;
@@ -68,12 +75,13 @@ class LevelOneCache {
 		void addCacheLineOnMiss(int _tag, LevelTwoCache *l2cache);
 
 		bool searchTagStore(int tag);
-		void processPrRequest(ProcessorRequest prReq, int tag, int value);
+		void processPrRequest(Processor *processor, ProcessorRequest prReq, int tag, int value);
 		void processBusRequest(BusRequest busReq);
 		void putRequestOnBus(BusRequest busReq);
 
 	public:
 		LevelOneCache(LevelTwoCache *_l2cache);
+		~LevelOneCache();
 };
 
 /*
@@ -99,6 +107,7 @@ class LevelTwoCache {
 
 	public:
 		LevelTwoCache();
+		~LevelTwoCache();
 };
 
 /*
@@ -123,14 +132,45 @@ class LevelTwoCache {
  */
 
 class Processor {
+	friend class LevelOneCache;
+	friend class SimExecutor;
+
 	private:
 		LevelOneCache lOneCache;
 		ProcessorRole role;
+		ProcessorState state;
 
 	public:
-		Processor(ProcessorRole _role, LevelTwoCache *l2cache);
+		Processor(ProcessorState _state, ProcessorRole _role, LevelTwoCache *l2cache);
 		void readCacheLine(int tag);
 		void writeCacheLine(ProcessorRequest prReq, int tag, int value);
+		void printReadSuccess(string state, int tag, int data);
+		int getState();
 };
 
-#endif /* PROCESSOR_CACHE_H_ */
+/*
+ * shared bus class
+ */
+class SharedBus {
+	friend class SimExecutor;
+	friend class LevelOneCache;
+
+	private:
+		CacheLine *lineBuffer;
+		BusRequest	cacheRequestBuffer;
+	public:
+		void setCacheLineBuffer (CacheLine *cl);
+		void setCacheRequestBuffer(BusRequest busRqst);
+};
+
+/*
+ * A simulator executor driver class that drives the simulation
+ */
+class SimExecutor {
+	public:
+		SimExecutor();
+		void levelOneCacheInsertion(Processor *pr, int tag);
+		void setBusSignal(SharedBus *bus, BusRequest busRqst);
+};
+
+#endif /* COMPONENTS_H_ */
