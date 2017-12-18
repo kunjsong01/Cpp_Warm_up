@@ -15,7 +15,9 @@
 using namespace std;
 
 void printCacheLine (string state, int tag, int data);
-void printCacheLocalOperation (ProcessorRole id, ProcessorRequest pr, int tag);
+void printCacheLocalOperation (ProcessorRole id, ProcessorRequest pr, int tag, HitMiss hm);
 void printFSMOperation (string msg);
+void printBus (BusRequest rqst, int tag);
+void printSniff (BusRequest rqst, int tag);
 
 #endif /* LOGGER_H_ */

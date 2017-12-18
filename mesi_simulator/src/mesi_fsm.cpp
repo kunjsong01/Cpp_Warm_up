@@ -1,8 +1,5 @@
 /*
  * mesi_fsm.cpp
- *
- *  Created on: 13 Dec 2017
- *      Author: kunson01
  */
 
 #include <iostream>
@@ -38,9 +35,9 @@ void Modified::remoteOperation(BusRequest stimulus, CacheLine *cl) {
 /*
  * Protocol implementation of Exclusive state
  */
-Exclusive::~Exclusive() { cout << "In exclusive: destroying " << endl;}
+Exclusive::~Exclusive() { }
 Exclusive::Exclusive() {
-	//this->StateName = "Exclusive";
+	this->StateName = "Exclusive";
 }
 
 void Exclusive::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
@@ -87,6 +84,9 @@ void Shared::remoteOperation(BusRequest stimulus, CacheLine *cl) {
  * Protocol implementation of Invalid state
  */
 Invalid::~Invalid() { }
+Invalid::Invalid() {
+	this->StateName = "Invalid";
+}
 
 void Invalid::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
 	switch(stimulus) {

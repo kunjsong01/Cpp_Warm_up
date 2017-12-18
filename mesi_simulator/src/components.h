@@ -1,9 +1,6 @@
 /*
- * cache_line.h
+ * components.h
  *	Modelling the L1d and L2 caches, as well as the cache line
- *
- *  Created on: 13 Dec 2017
- *      Author: kunson01
  */
 
 #ifndef COMPONENTS_H_
@@ -11,6 +8,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 
 #include "component_fsm.h"
 #include "request.h"
@@ -23,6 +21,55 @@ class LevelTwoCache;
 class LevelOneCache;
 class Processor;
 class SimExecutor;
+class SharedBus;
+class CacheState;
+
+/*
+ * Cache state classes
+ */
+class CacheState {
+	public:
+		string StateName;
+	public:
+		virtual ~CacheState() { };
+		virtual void operation(LevelOneCache *l1cache) { };
+};
+
+class CacheIdle: public CacheState {
+	public:
+		~CacheIdle();
+		void operation(LevelOneCache *l1cache);
+};
+
+class CacheProcessingPrRd: public CacheState {
+	public:
+		~CacheProcessingPrRd();
+		void operation(LevelOneCache *l1cache);
+};
+
+class CacheProcessingPrWr: public CacheState {
+	public:
+		~CacheProcessingPrWr();
+		void operation(LevelOneCache *l1cache);
+};
+
+class CacheSniffing: public CacheState {
+	public:
+		~CacheSniffing();
+		void operation(LevelOneCache *l1cache);
+};
+
+class CacheProcessingSniffed: public CacheState {
+	public:
+		~CacheProcessingSniffed();
+		void operation(LevelOneCache *l1cache);
+};
+
+class CacheDone: public CacheState {
+	public:
+		~CacheDone();
+		void operation(LevelOneCache *l1cache);
+};
 
 /*
  * Cache line class that models each cace line
@@ -59,28 +106,49 @@ class CacheLine {
  */
 class LevelOneCache {
 
-	// Processor (and bus?) can access it
 	friend class Processor;
 	friend class SimExecutor;
+	friend class CacheIdle;
+	friend class CacheProcessingPrRd;
+	friend class CacheProcessingPrWr;
+	friend class CacheSniffing;
+	friend class CacheProcessingSniffed;
 
 	private:
 		vector<CacheLine> dataStore;
 		vector<CacheLine>::iterator storeItr;
 		int maxSize = 5;
 		int itrShift = 0;
-		// pointer to next level cache, i.e. the L2 cache
+		// processor to which it's connecting
+		Processor *processor;
+		// connect L1d cache to the shared bus
+		SharedBus *bus = NULL;
+		// Logical link between current L1d and L2
 		LevelTwoCache *l2cache;
+		// current state of cache
+		CacheState *cacheState;
+		ProcessorRequest prRequest; // processor request signal
+		BusRequest bsRequestSignal;
+		int prRequestedTag; // processor requested tag
+		int prRequestedValue; // processor requested value
 
 		void lruDelete();
 		void addCacheLineOnMiss(int _tag, LevelTwoCache *l2cache);
 
 		bool searchTagStore(int tag);
-		void processPrRequest(Processor *processor, ProcessorRequest prReq, int tag, int value);
-		void processBusRequest(BusRequest busReq);
+		void processPrRequest(Processor *processor, ProcessorRequest prReq);
 		void putRequestOnBus(BusRequest busReq);
+		void setCacheState(CacheState *_state);
+		void setPrRequestedTag(int tag);
+		void setPrRequest(ProcessorRequest request);
+		void setProcessorOwnership(Processor *_processor);
+		void processSniffedSignal(BusRequest sniffedBusSignal, int sniffedTag);
+		void getCacheLineFromL2(int tag);
+		void act();
+		void sniff();
 
 	public:
-		LevelOneCache(LevelTwoCache *_l2cache);
+		LevelOneCache(LevelTwoCache *_l2cache, SharedBus *bus);
 		~LevelOneCache();
 };
 
@@ -141,11 +209,15 @@ class Processor {
 		ProcessorState state;
 
 	public:
-		Processor(ProcessorState _state, ProcessorRole _role, LevelTwoCache *l2cache);
+		Processor(ProcessorState _state, ProcessorRole _role, LevelTwoCache *l2cache, SharedBus *bus);
 		void readCacheLine(int tag);
 		void writeCacheLine(ProcessorRequest prReq, int tag, int value);
 		void printReadSuccess(string state, int tag, int data);
-		int getState();
+		ProcessorState getState();
+		ProcessorRole getRole();
+		void cacheAct();
+		void cacheSniff();
+		void processorReset();
 };
 
 /*
@@ -154,13 +226,21 @@ class Processor {
 class SharedBus {
 	friend class SimExecutor;
 	friend class LevelOneCache;
+	friend class Processor;
 
 	private:
-		CacheLine *lineBuffer;
-		BusRequest	cacheRequestBuffer;
+		// bus signal and data buffers
+		CacheLine busData;
+		BusRequest busSignal;
+		// target tag
+		int requestedTag;
 	public:
-		void setCacheLineBuffer (CacheLine *cl);
-		void setCacheRequestBuffer(BusRequest busRqst);
+		SharedBus();
+		void setBusDataBuffer (CacheLine cl);
+		void setBusSignalBuffer(BusRequest busRqst);
+		void setBroadcastTag(int tag);
+		void printBusInfo ();
+		void busReset();
 };
 
 /*
@@ -171,6 +251,11 @@ class SimExecutor {
 		SimExecutor();
 		void levelOneCacheInsertion(Processor *pr, int tag);
 		void setBusSignal(SharedBus *bus, BusRequest busRqst);
+		void printBusBroadcast(SharedBus *bus);
+		void setCacheAct(Processor *pr);
+		void setCacheSniff(Processor *pr);
+		void resetSharedBus(SharedBus *bus);
+		void resetProcessor(Processor *p);
 };
 
 #endif /* COMPONENTS_H_ */

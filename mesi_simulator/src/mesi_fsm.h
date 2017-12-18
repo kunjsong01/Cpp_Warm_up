@@ -1,8 +1,5 @@
 /*
  * mesi_fsm.h
- *
- *  Created on: 13 Dec 2017
- *      Author: kunson01
  */
 
 #ifndef MESI_FSM_H_

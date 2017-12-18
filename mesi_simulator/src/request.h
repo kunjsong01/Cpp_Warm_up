@@ -20,7 +20,9 @@ typedef enum {
 	BusRdx,
 	BusUpgr,
 	Flush,
-	FlushOpt
+	FlushOpt,
+	NoFlushOpt,
+	None
 } BusRequest;
 
 // request group
@@ -28,5 +30,11 @@ typedef enum {
 	Local=0, // processor local request for a cache line
 	Remote // bus request for a cache line
 } Request;
+
+// Cache hit/miss result
+typedef enum {
+	Miss=0,
+	Hit
+} HitMiss;
 
 #endif /* REQUEST_H_ */

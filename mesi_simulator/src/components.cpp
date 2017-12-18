@@ -1,8 +1,5 @@
 /*
- * cache_line.cpp
- *
- *  Created on: 13 Dec 2017
- *      Author: kunson01
+ * components.cpp
  */
 
 #include "components.h"
@@ -47,16 +44,23 @@ void CacheLine::stateOperation(Request request, ProcessorRequest prRqst, BusRequ
 /*******************************************************************************************
  * L1d cache method implementation
  *******************************************************************************************/
-LevelOneCache::LevelOneCache(LevelTwoCache *_l2cache): l2cache(_l2cache)  { }
-LevelOneCache::~LevelOneCache() {
-	//cout << "In L1 destroyer..." << endl;
-	// delete cache line states on the heap
-	this->storeItr = this->dataStore.begin();
-	for(; this->storeItr != this->dataStore.end(); ++this->storeItr) {
-		delete this->storeItr->currentState;
-	}
+LevelOneCache::LevelOneCache(LevelTwoCache *_l2cache, SharedBus *bus): l2cache(_l2cache)  {
+	this->bus = bus;
+	this->cacheState = new CacheIdle;
 }
 
+LevelOneCache::~LevelOneCache() {
+	//cout << "In L1 destroyer..." << endl;
+
+	// delete cache state
+	delete this->cacheState;
+
+	// delete cache line states on the heap
+	//this->storeItr = this->dataStore.begin();
+	//for(; this->storeItr != this->dataStore.end(); ++this->storeItr) {
+	//	delete this->storeItr->currentState;
+	//}
+}
 
 void LevelOneCache::lruDelete() {
 	// delete the Least Recently Used cache line
@@ -86,60 +90,99 @@ bool LevelOneCache::searchTagStore(int tag) {
 	this->storeItr = this->dataStore.begin();
 	this->itrShift = 0;
 	for (; this->storeItr != this->dataStore.end(); ++this->storeItr) {
-		++this->itrShift;
 		if (this->storeItr->tag == tag) {
 			isIn = true;
 			break;
 		}
+		++this->itrShift;
 	}
 
 	return isIn;
 }
 
-void LevelOneCache::processPrRequest(Processor *processor, ProcessorRequest prReq, int tag, int value) {
+void LevelOneCache::processPrRequest(Processor *processor, ProcessorRequest prReq) {
 
-	// if L1d has the requested cache line and state is valid, return it.
-	// if L1d has the requested cache line and state is invalid, or
-	// if L1d does not have the requested cache line, place a BusRd request in bus signal buffer
-	// if other L1d cache has it, it will be supplied by the other L1d cache
-	// otherwise get it from L2 to model the temporal and spatial locality
-	// meanwhile L1d needs to put a BusRequest on the shared bus
+	// set cache state
+	int tag = this->prRequestedTag;
 
 	// dealing with cache miss
-	if (this->searchTagStore(tag) == false) {
+	if (this->searchTagStore(tag) == true) {
+		string s;
+		this->storeItr = this->dataStore.begin() + this->itrShift;
+		//cout << "This is shift" << itrShift << endl;
+
+		// now processing the PrRequest
+		switch(prReq) {
+			case PrRd:
+				// return the data and set processor state to success
+				processor->state = Succcess;
+				//this->storeItr = this->dataStore.begin() + this->itrShift;
+				printCacheLocalOperation(processor->role, prReq, tag, Hit);
+				delete this->cacheState;
+				this->cacheState = new CacheIdle;
+				//cout << "Data store size: " << this->dataStore.size() << endl;
+				processor->printReadSuccess(\
+						this->storeItr->currentState->StateName, this->storeItr->tag, this->storeItr->data);
+				break;
+			case PrWr:
+				break;
+			default:
+				cout << " Unknown prReq" << endl;
+		}
+	}
+	else {
 		//this->addCacheLineOnMiss(tag, this->l2cache);
+		// print cache miss
+		printCacheLocalOperation(processor->role, prReq, tag, Miss);
 
-		// put BusRd on the bus if processor trying to read something not existing
-		// in its L1d cache
+		// set bus signal and requested cache line tag
+		this->bus->setBusSignalBuffer(BusRd);
+		this->bus->setBroadcastTag(tag);
 	}
-
-	string s;
-	this->storeItr = this->dataStore.begin() + this->itrShift;
-
-	// now processing the PrRequest
-	switch(prReq) {
-		case PrRd:
-			// return the data and set processor state to success
-			processor->state = Success;
-			this->storeItr = this->dataStore.begin() + this->itrShift;
-			printCacheLocalOperation(processor->role, prReq, tag);
-			processor->printReadSuccess(\
-					this->storeItr->currentState->StateName, this->storeItr->tag, this->storeItr->data);
-			break;
-		case PrWr:
-			break;
-		default:
-			cout << " Unknown prReq" << endl;
-	}
-
 }
 
-void LevelOneCache::processBusRequest(BusRequest busReq) {
-
+void LevelOneCache::getCacheLineFromL2(int tag) {
+	this->addCacheLineOnMiss(tag, this->l2cache);
 }
 
 void LevelOneCache::putRequestOnBus(BusRequest busReq) {
 
+}
+
+void LevelOneCache::setCacheState(CacheState *_state) {
+	delete this->cacheState;
+	this->cacheState = _state;
+}
+
+void LevelOneCache::setPrRequestedTag(int tag) {
+	this->prRequestedTag = tag;
+}
+
+void LevelOneCache::setPrRequest(ProcessorRequest request) {
+	this->prRequest = request;
+}
+
+void LevelOneCache::processSniffedSignal(BusRequest sniffedBusSignal, int sniffedTag) {
+
+
+}
+
+void LevelOneCache::act() {
+	this->cacheState->operation(this);
+}
+
+void LevelOneCache::sniff() {
+	this->bsRequestSignal = this->bus->busSignal;
+	this->prRequestedTag = this->bus->requestedTag;
+
+	printSniff(this->bus->busSignal, this->bus->requestedTag);
+	delete this->cacheState;
+	this->cacheState = new CacheProcessingSniffed;
+	this->cacheState->operation(this);
+}
+
+void LevelOneCache::setProcessorOwnership(Processor *_processor) {
+	this->processor = _processor;
 }
 
 /*******************************************************************************************
@@ -179,14 +222,17 @@ CacheLine LevelTwoCache::returnCacheLine(int _tag) {
 /*******************************************************************************************
  * processor method implementation
  *******************************************************************************************/
-Processor::Processor(ProcessorState _state, ProcessorRole _role, LevelTwoCache *l2cache): \
-							state(_state), role(_role), lOneCache(l2cache) { }
+Processor::Processor(ProcessorState _state, ProcessorRole _role, LevelTwoCache *l2cache, SharedBus *bus): \
+							state(_state), role(_role), lOneCache(l2cache, bus) { }
 
 void Processor::readCacheLine(int tag) {
 	// processor goes to ReadWait state and send the PrRd request to its own L1d cache
 	this->state = ReadWait;
 	cout << "\t Processor " << this->role << " sends PrRd " << "requesting tag: " << tag << endl;
-	this->lOneCache.processPrRequest(this, PrRd, tag, 0);
+	this->lOneCache.setProcessorOwnership(this);
+	this->lOneCache.setCacheState((new CacheProcessingPrRd));
+	this->lOneCache.setPrRequestedTag(tag);
+	this->lOneCache.setPrRequest(PrRd);
 }
 
 void Processor::writeCacheLine(ProcessorRequest prReq, int tag, int value) {
@@ -199,19 +245,58 @@ void Processor::printReadSuccess(string state, int tag, int data) {
 	printCacheLine(state, tag, data);
 }
 
-int Processor::getState() {
+ProcessorState Processor::getState() {
 	return this->state;
+}
+
+ProcessorRole Processor::getRole() {
+	return this->role;
+}
+
+void Processor::cacheAct() {
+	this->lOneCache.act();
+}
+
+void Processor::cacheSniff() {
+	// cache sniffs the bus
+	// just print out the bus signal and data buffers to confirm that this cache actually
+	// sniffs the bus
+	this->lOneCache.sniff();
+}
+
+void Processor::processorReset() {
+	this->state = Idle;
+
+	// TO-DO: add L1d reset???
 }
 
 /*******************************************************************************************
  * shared bus method implementation
  *******************************************************************************************/
-void SharedBus::setCacheLineBuffer (CacheLine *cl) {
-	this->lineBuffer = cl;
+SharedBus::SharedBus(): busData(255, 255) {
+	this->busSignal = None;
+	this->requestedTag = 255; // 255 means "no data"
 }
 
-void SharedBus::setCacheRequestBuffer(BusRequest busRqst) {
-	this->cacheRequestBuffer = busRqst;
+void SharedBus::setBusDataBuffer (CacheLine cl) {
+	this->busData = cl;
+}
+
+void SharedBus::setBusSignalBuffer(BusRequest busRqst) {
+	this->busSignal = busRqst;
+}
+
+void SharedBus::printBusInfo () {
+	printBus(this->busSignal, this->requestedTag);
+}
+
+void SharedBus::setBroadcastTag(int tag) {
+	this->requestedTag = tag;
+}
+
+void SharedBus::busReset() {
+	this->busSignal = None;
+	this->requestedTag = 255; // 255 means "no data"
 }
 
 /*******************************************************************************************
@@ -227,8 +312,79 @@ void SimExecutor::levelOneCacheInsertion(Processor *pr, int tag) {
 			pr->lOneCache.l2cache);
 }
 
-void setBusSignal(SharedBus *bus, int tag) {
-
-
+void SimExecutor::setBusSignal(SharedBus *bus, BusRequest busRqst) {
 
 }
+
+void SimExecutor::printBusBroadcast(SharedBus *bus) {
+	bus->printBusInfo();
+}
+
+void SimExecutor::setCacheAct(Processor *pr) {
+	pr->cacheAct();
+}
+
+void SimExecutor::setCacheSniff(Processor *pr) {
+	pr->cacheSniff();
+}
+
+void SimExecutor::resetSharedBus(SharedBus *bus) {
+	bus->busReset();
+}
+
+void SimExecutor::resetProcessor(Processor *p) {
+	p->processorReset();
+}
+
+/*******************************************************************************************
+ * cache state method implementation
+ *******************************************************************************************/
+CacheIdle::~CacheIdle() { };
+void CacheIdle::operation(LevelOneCache *l1cache) {
+
+}
+
+CacheProcessingPrRd::~CacheProcessingPrRd() { }
+void CacheProcessingPrRd::operation(LevelOneCache *l1cache) {
+	l1cache->processPrRequest(l1cache->processor, l1cache->prRequest);
+}
+
+CacheProcessingPrWr::~CacheProcessingPrWr() { }
+void CacheProcessingPrWr::operation(LevelOneCache *l1cache) {
+
+}
+
+CacheSniffing::~CacheSniffing() { }
+void CacheSniffing::operation(LevelOneCache *l1cache) {
+
+}
+
+CacheProcessingSniffed::~CacheProcessingSniffed() { }
+void CacheProcessingSniffed::operation(LevelOneCache *l1cache) {
+	// sniffing cache has the copy, set to shared and return it because the acting cache is trying to read it
+	if (l1cache->bsRequestSignal == BusRd) {
+		if (l1cache->searchTagStore(l1cache->prRequestedTag) == true) {
+			l1cache->bus->setBusSignalBuffer(FlushOpt);
+			l1cache->storeItr = l1cache->dataStore.begin() + l1cache->itrShift;
+			l1cache->bus->setBusDataBuffer(*(l1cache->storeItr));
+		}
+		else {
+			// otherwise indicate "I don't have it"
+			l1cache->bus->setBusSignalBuffer(NoFlushOpt);
+			delete l1cache->cacheState;
+			l1cache->cacheState = new CacheDone;
+		}
+	}
+
+	if (l1cache->bsRequestSignal == NoFlushOpt) {
+		l1cache->getCacheLineFromL2(l1cache->prRequestedTag);
+		delete l1cache->cacheState;
+		l1cache->cacheState = new CacheProcessingPrRd;
+	}
+}
+
+CacheDone::~CacheDone() { };
+void CacheDone::operation(LevelOneCache *l1cache) {
+
+}
+
