@@ -37,36 +37,42 @@ class CacheState {
 
 class CacheIdle: public CacheState {
 	public:
+		CacheIdle();
 		~CacheIdle();
 		void operation(LevelOneCache *l1cache);
 };
 
 class CacheProcessingPrRd: public CacheState {
 	public:
+		CacheProcessingPrRd();
 		~CacheProcessingPrRd();
 		void operation(LevelOneCache *l1cache);
 };
 
 class CacheProcessingPrWr: public CacheState {
 	public:
+		CacheProcessingPrWr();
 		~CacheProcessingPrWr();
 		void operation(LevelOneCache *l1cache);
 };
 
 class CacheSniffing: public CacheState {
 	public:
+		CacheSniffing();
 		~CacheSniffing();
 		void operation(LevelOneCache *l1cache);
 };
 
 class CacheProcessingSniffed: public CacheState {
 	public:
+		CacheProcessingSniffed();
 		~CacheProcessingSniffed();
 		void operation(LevelOneCache *l1cache);
 };
 
 class CacheDone: public CacheState {
 	public:
+		CacheDone();
 		~CacheDone();
 		void operation(LevelOneCache *l1cache);
 };
@@ -90,6 +96,8 @@ class CacheLine {
 		CacheLine( int _tag, int _data);
 		void setState( State *state);
 		void stateOperation(Request request, ProcessorRequest prRqst, BusRequest busRqst);
+		string getCurrentStateName();
+		State* getCurrentState();
 };
 
 /*
@@ -236,9 +244,12 @@ class SharedBus {
 		int requestedTag;
 	public:
 		SharedBus();
+		~SharedBus();
 		void setBusDataBuffer (CacheLine cl);
 		void setBusSignalBuffer(BusRequest busRqst);
 		void setBroadcastTag(int tag);
+		BusRequest getBussSingalBuffer();
+		int getBroadcastTag();
 		void printBusInfo ();
 		void busReset();
 };

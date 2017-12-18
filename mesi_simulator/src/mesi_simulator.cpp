@@ -80,7 +80,7 @@ int main() {
 	/*
 	 * P0 local read, cache hit
 	 */
-	cout << "{Processor Local Read} : cache line already exists in processor's L1d cache" << endl;
+	cout << "{Processor Local Read}: P0 reads in a cache line that already exists in its L1d cache" << endl;
 	simulator.levelOneCacheInsertion(&P0, 1); // test case prep
 	P0.readCacheLine(1); // initiate test case
 	runSimulation(P0, P1, simulator, &bus);
@@ -90,10 +90,14 @@ int main() {
 	/*
 	 * P0 local read, cache miss, P1 does not have the copy
 	 */
-	cout << "{Processor Local Read}: cache line does not exist in the L1d cache of Processor 0, " \
-			<< "and Processor 1 does not have the copy either" << endl;
+	cout << "{Processor Local Read}: P0 reads in a cache line that doesn't exist in its L1d cache, " \
+			<< "and P1 does not have the copy either" << endl;
 	P0.readCacheLine(2);
 	runSimulation(P0, P1, simulator, &bus);
+
+	/*
+	 * P0 remote read, cache miss, P1 does not have the copy
+	 */
 
 	return 0;
 }

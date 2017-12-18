@@ -48,3 +48,19 @@ void printSniff (BusRequest rqst, int tag) {
 
 	cout << "\t\t [Cache Sniffing]: " << msg << endl;
 }
+
+void printProcessingSniff (BusRequest rqst, int tag) {
+	string msg = "Request: " + to_string(rqst) + \
+			", Tag: " + to_string(tag);
+
+	cout << "\t\t [Cache Processing Sniffed Bus Signal/Data]: " << msg << endl;
+}
+
+void printCacheDone() {
+	cout << "\t\t [Cache Done]: No more actions or sniffs. This cache finished the job in this round." << endl;
+}
+
+void pintL2CacheOperation(int tag) {
+	string msg = "Getting cache line with tag " + to_string(tag) + " from L2 ...";
+	cout << "\t\t [L1d cache querying shared L2]: " << msg << endl;
+}
