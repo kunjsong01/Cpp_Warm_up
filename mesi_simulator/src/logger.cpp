@@ -50,10 +50,17 @@ void printSniff (BusRequest rqst, int tag) {
 }
 
 void printProcessingSniff (BusRequest rqst, int tag) {
-	string msg = "Request: " + to_string(rqst) + \
-			", Tag: " + to_string(tag);
 
-	cout << "\t\t [Cache Processing Sniffed Bus Signal/Data]: " << msg << endl;
+	if (rqst == None) {
+		string msg = "Request: " + to_string(rqst) + \
+				", Tag: " + to_string(tag) + ". No signal to be processed ...";
+		cout << "\t\t [Cache Processing Sniffed Bus Signal/Data]: " << msg << endl;
+	}
+	else {
+		string msg = "Request: " + to_string(rqst) + \
+				", Tag: " + to_string(tag);
+		cout << "\t\t [Cache Processing Sniffed Bus Signal/Data]: " << msg << endl;
+	}
 }
 
 void printCacheDone() {

@@ -394,6 +394,8 @@ void CacheSniffing::operation(LevelOneCache *l1cache) {
 CacheProcessingSniffed::CacheProcessingSniffed() { 	this->StateName = "CacheProcessingSniffed"; };
 CacheProcessingSniffed::~CacheProcessingSniffed() { }
 void CacheProcessingSniffed::operation(LevelOneCache *l1cache) {
+	// otherwise indicate "I don't have it"
+	l1cache->bus->setBusSignalBuffer(NoFlushOpt);
 	printProcessingSniff(l1cache->bus->getBussSingalBuffer(), l1cache->bus->getBroadcastTag());
 	// sniffing cache has the copy, set to shared and return it because the acting cache is trying to read it
 	if (l1cache->bsRequestSignal == BusRd) {
@@ -403,8 +405,6 @@ void CacheProcessingSniffed::operation(LevelOneCache *l1cache) {
 			l1cache->bus->setBusDataBuffer(*(l1cache->storeItr));
 		}
 		else {
-			// otherwise indicate "I don't have it"
-			l1cache->bus->setBusSignalBuffer(NoFlushOpt);
 			delete l1cache->cacheState;
 			l1cache->cacheState = new CacheDone;
 		}
@@ -412,6 +412,8 @@ void CacheProcessingSniffed::operation(LevelOneCache *l1cache) {
 
 	if ( l1cache->bsRequestSignal == NoFlushOpt ) {
 		if (l1cache->cacheState->StateName != "CacheDone") {
+			// upon completion, reset the bus
+			l1cache->bus->busReset();
 			l1cache->getCacheLineFromL2(l1cache->prRequestedTag);
 			delete l1cache->cacheState;
 			l1cache->cacheState = new CacheProcessingPrRd;
