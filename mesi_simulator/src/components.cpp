@@ -8,7 +8,6 @@
 #include <stddef.h>
 #include "mesi_fsm.h"
 #include "request.h"
-#include "logger.h"
 #include "simulator.h"
 
 using namespace std;
@@ -293,6 +292,8 @@ void Processor::processorReset() {
 SharedBus::SharedBus(): busData(255, 255) {
 	this->busSignal = None;
 	this->requestedTag = 255; // 255 means "no data"
+	BusRqstTranslator _translator;
+	this->translator = _translator;
 }
 
 SharedBus::~SharedBus() {
@@ -315,7 +316,7 @@ int SharedBus::getBroadcastTag() {
 }
 
 void SharedBus::printBusInfo () {
-	printBus(this->busSignal, this->requestedTag);
+	printBus(this->busSignal, this->requestedTag, this->translator);
 }
 
 void SharedBus::setBroadcastTag(int tag) {
@@ -388,7 +389,7 @@ void CacheProcessingPrWr::operation(LevelOneCache *l1cache) {
 CacheSniffing::CacheSniffing() { this->StateName = "CacheSniffing"; };
 CacheSniffing::~CacheSniffing() { }
 void CacheSniffing::operation(LevelOneCache *l1cache) {
-	printSniff(l1cache->bus->getBussSingalBuffer(), l1cache->bus->getBroadcastTag());
+	printSniff(l1cache->bus->getBussSingalBuffer(), l1cache->bus->getBroadcastTag(), l1cache->bus->translator);
 }
 
 CacheProcessingSniffed::CacheProcessingSniffed() { 	this->StateName = "CacheProcessingSniffed"; };

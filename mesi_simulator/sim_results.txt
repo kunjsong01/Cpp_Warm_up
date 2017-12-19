@@ -3,15 +3,15 @@ Cache Coherence MESI simulator, start simulation ...
 {Processor Local Read}: P0 reads in a cache line that already exists in its L1d cache
 	 Processor 0 sends PrRd requesting tag: 1
 @@ Cycle 1 :
-		 [Bus Broadcasting]: Request: 6, Tag: 255
+		 [Bus Broadcasting]: Request: None, Tag: 255
   - Acting Processor: 0
 		 [Cache Operation]: Processor id (0), PrRd request - Cache tag: 1
 		 [Cache Operation]: 0-Miss, 1-Hit? Result: 1
 	 Processor 0 PrRd success - 
 		 Cache Line - Tag: 1, State: Exclusive, Data: 10
-		 [Bus Broadcasting]: Request: 6, Tag: 255
+		 [Bus Broadcasting]: Request: None, Tag: 255
   - Sniffing Processor: 1
-		 [Cache Sniffing]: Request: 6, Tag: 255
+		 [Cache Sniffing]: Request: None, Tag: 255
 		 [Cache Processing Sniffed Bus Signal/Data]: Request: 5, Tag: 255
 
 Successful instruction retirement. 
@@ -21,36 +21,37 @@ Total cycle consumption: 1
 {Processor Local Read}: P0 reads in a cache line that doesn't exist in its L1d cache, and P1 does not have the copy either
 	 Processor 0 sends PrRd requesting tag: 2
 @@ Cycle 1 :
-		 [Bus Broadcasting]: Request: 6, Tag: 255
+		 [Bus Broadcasting]: Request: None, Tag: 255
   - Acting Processor: 0
 		 [Cache Operation]: Processor id (0), PrRd request - Cache tag: 2
 		 [Cache Operation]: 0-Miss, 1-Hit? Result: 0
-		 [Bus Broadcasting]: Request: 0, Tag: 2
+		 [Bus Broadcasting]: Request: BusRd, Tag: 2
   - Sniffing Processor: 1
-		 [Cache Sniffing]: Request: 0, Tag: 2
+		 [Cache Sniffing]: Request: BusRd, Tag: 2
 		 [Cache Processing Sniffed Bus Signal/Data]: Request: 5, Tag: 2
 
 @@ Cycle 2 :
-		 [Bus Broadcasting]: Request: 5, Tag: 2
+		 [Bus Broadcasting]: Request: NoFlushOpt, Tag: 2
   - Acting Processor: 1
 		 [Cache Done]: No more actions or sniffs. This cache finished the job in this round.
-		 [Bus Broadcasting]: Request: 5, Tag: 2
+		 [Bus Broadcasting]: Request: NoFlushOpt, Tag: 2
   - Sniffing Processor: 0
-		 [Cache Sniffing]: Request: 5, Tag: 2
+		 [Cache Sniffing]: Request: NoFlushOpt, Tag: 2
 		 [Cache Processing Sniffed Bus Signal/Data]: Request: 5, Tag: 2
 		 [L1d cache querying shared L2]: Getting cache line with tag 2 from L2 ...
 
 @@ Cycle 3 :
-		 [Bus Broadcasting]: Request: 6, Tag: 255
+		 [Bus Broadcasting]: Request: None, Tag: 255
   - Acting Processor: 0
 		 [Cache Operation]: Processor id (0), PrRd request - Cache tag: 2
 		 [Cache Operation]: 0-Miss, 1-Hit? Result: 1
 	 Processor 0 PrRd success - 
 		 Cache Line - Tag: 2, State: Exclusive, Data: 20
-		 [Bus Broadcasting]: Request: 6, Tag: 255
+		 [Bus Broadcasting]: Request: None, Tag: 255
   - Sniffing Processor: 1
 		 [Cache Done]: No more actions or sniffs. This cache finished the job in this round.
 
 Successful instruction retirement. 
 Total cycle consumption: 3
 ======================================================================================================================================================
+

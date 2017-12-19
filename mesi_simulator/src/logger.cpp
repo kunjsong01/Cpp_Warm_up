@@ -11,6 +11,22 @@
 
 using namespace std;
 
+// BusRqstTranslator method implementation
+BusRqstTranslator::BusRqstTranslator() {
+	this->busRqstDict[BusRd] = "BusRd";
+	this->busRqstDict[BusRdx] = "BusRdx";
+	this->busRqstDict[BusUpgr] = "BusUpgr";
+	this->busRqstDict[Flush] = "Flush";
+	this->busRqstDict[FlushOpt] = "FlushOpt";
+	this->busRqstDict[NoFlushOpt] = "NoFlushOpt";
+	this->busRqstDict[None] = "None";
+}
+
+string BusRqstTranslator::translate(BusRequest rqst) {
+	return this->busRqstDict[rqst];
+}
+
+// logger method implementation
 void printCacheLine (string state, int tag, int data) {
 	string msg = "\t\t Cache Line - Tag: " + to_string(tag) + ", " + \
 					"State: " + state + ", " \
@@ -35,15 +51,15 @@ void printFSMOperation (string msg) {
 	cout << "\t\t [FSM Operation]: " << msg << endl;
 }
 
-void printBus (BusRequest rqst, int tag) {
-	string msg = "Request: " + to_string(rqst) + \
+void printBus (BusRequest rqst, int tag, BusRqstTranslator &translator) {
+	string msg = "Request: " + translator.translate(rqst) + \
 			", Tag: " + to_string(tag);
 
 	cout << "\t\t [Bus Broadcasting]: " << msg << endl;
 }
 
-void printSniff (BusRequest rqst, int tag) {
-	string msg = "Request: " + to_string(rqst) + \
+void printSniff (BusRequest rqst, int tag, BusRqstTranslator &translator) {
+	string msg = "Request: " + translator.translate(rqst) + \
 			", Tag: " + to_string(tag);
 
 	cout << "\t\t [Cache Sniffing]: " << msg << endl;

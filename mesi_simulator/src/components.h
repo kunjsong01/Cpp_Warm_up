@@ -13,6 +13,7 @@
 #include "component_fsm.h"
 #include "request.h"
 #include "simulator.h"
+#include "logger.h"
 
 using namespace std;
 
@@ -243,6 +244,7 @@ class SharedBus {
 		// target tag
 		int requestedTag;
 	public:
+		BusRqstTranslator translator;
 		SharedBus();
 		~SharedBus();
 		void setBusDataBuffer (CacheLine cl);
