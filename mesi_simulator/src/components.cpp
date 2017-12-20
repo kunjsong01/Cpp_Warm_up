@@ -173,6 +173,19 @@ void LevelOneCache::processSniffedSignal(BusRequest sniffedBusSignal, int sniffe
 
 }
 
+void LevelOneCache::resetL1dCache() {
+	this->storeItr = this->dataStore.begin();
+	for (; this->storeItr != this->dataStore.end(); ++this->storeItr) {
+		// delete state of each cache line
+		delete this->storeItr->currentState;
+		// prevent dangling pointer
+		this->storeItr->currentState = NULL;
+	}
+
+	// erase the cache line
+	this->dataStore.clear();
+}
+
 void LevelOneCache::act() {
 	//cout << "Cache state in act: " << this->cacheState->StateName << endl;
 	this->cacheState->operation(this);
@@ -220,6 +233,8 @@ LevelTwoCache::~LevelTwoCache() {
 	for(; storeItr != this->dataStore.end(); ++this->storeItr) {
 		delete this->storeItr->currentState;
 	}
+
+	this->dataStore.clear();
 }
 
 CacheLine LevelTwoCache::returnCacheLine(int _tag) {
@@ -281,9 +296,13 @@ void Processor::cacheSniff() {
 }
 
 void Processor::processorReset() {
+	// reset processor state
 	this->state = Idle;
 
-	// TO-DO: add L1d reset???
+	if (this->lOneCache.dataStore.size() != 0) {
+		// reset the L1d cache of this processor
+		this->lOneCache.resetL1dCache();
+	}
 }
 
 /*******************************************************************************************
@@ -397,7 +416,7 @@ CacheProcessingSniffed::~CacheProcessingSniffed() { }
 void CacheProcessingSniffed::operation(LevelOneCache *l1cache) {
 	// otherwise indicate "I don't have it"
 	l1cache->bus->setBusSignalBuffer(NoFlushOpt);
-	printProcessingSniff(l1cache->bus->getBussSingalBuffer(), l1cache->bus->getBroadcastTag());
+	printProcessingSniff(l1cache->bus->getBussSingalBuffer(), l1cache->bus->getBroadcastTag(), l1cache->bus->translator);
 	// sniffing cache has the copy, set to shared and return it because the acting cache is trying to read it
 	if (l1cache->bsRequestSignal == BusRd) {
 		if (l1cache->searchTagStore(l1cache->prRequestedTag) == true) {

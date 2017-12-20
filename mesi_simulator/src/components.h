@@ -153,6 +153,7 @@ class LevelOneCache {
 		void setProcessorOwnership(Processor *_processor);
 		void processSniffedSignal(BusRequest sniffedBusSignal, int sniffedTag);
 		void getCacheLineFromL2(int tag);
+		void resetL1dCache();
 		void act();
 		void sniff();
 

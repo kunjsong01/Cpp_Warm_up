@@ -65,17 +65,17 @@ void printSniff (BusRequest rqst, int tag, BusRqstTranslator &translator) {
 	cout << "\t\t [Cache Sniffing]: " << msg << endl;
 }
 
-void printProcessingSniff (BusRequest rqst, int tag) {
+void printProcessingSniff (BusRequest rqst, int tag, BusRqstTranslator &translator) {
+
+	string msg = "Request: " + translator.translate(rqst) + \
+					", Tag: " + to_string(tag);
 
 	if (rqst == None) {
-		string msg = "Request: " + to_string(rqst) + \
-				", Tag: " + to_string(tag) + ". No signal to be processed ...";
-		cout << "\t\t [Cache Processing Sniffed Bus Signal/Data]: " << msg << endl;
+		cout << "\t\t [Cache Processing Sniffed Signal]: " << msg \
+				<< ". No signal to be processed ..." << endl;
 	}
 	else {
-		string msg = "Request: " + to_string(rqst) + \
-				", Tag: " + to_string(tag);
-		cout << "\t\t [Cache Processing Sniffed Bus Signal/Data]: " << msg << endl;
+		cout << "\t\t [Cache Processing Sniffed Signal]: " << msg << endl;
 	}
 }
 
