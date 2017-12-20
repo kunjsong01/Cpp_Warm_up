@@ -88,6 +88,8 @@ class CacheLine {
 	friend class LevelOneCache;
 	friend class LevelTwoCache;
 	friend class SimExecutor;
+	template <class T>
+	friend void printCache(int tag, T *cache);
 
 	private:
 		State *currentState;
@@ -122,6 +124,8 @@ class LevelOneCache {
 	friend class CacheProcessingPrWr;
 	friend class CacheSniffing;
 	friend class CacheProcessingSniffed;
+	template <class T>
+	friend void printCache(int tag, T *cache);
 
 	private:
 		vector<CacheLine> dataStore;
@@ -154,6 +158,7 @@ class LevelOneCache {
 		void processSniffedSignal(BusRequest sniffedBusSignal, int sniffedTag);
 		void getCacheLineFromL2(int tag);
 		void resetL1dCache();
+		void printData(int tag);
 		void act();
 		void sniff();
 
@@ -176,6 +181,9 @@ class LevelTwoCache {
 	// Note that this is just an "logical" link between L1 and L2 cache.
 	// This is just to simply the bus model
 	friend class LevelOneCache;
+	template <class T>
+	friend void printCache(int tag, T *cache);
+
 	private:
 		vector<CacheLine> dataStore;
 		vector<CacheLine>::iterator storeItr;
@@ -186,6 +194,7 @@ class LevelTwoCache {
 	public:
 		LevelTwoCache();
 		~LevelTwoCache();
+		void printData(int tag);
 };
 
 /*
@@ -228,6 +237,7 @@ class Processor {
 		void cacheAct();
 		void cacheSniff();
 		void processorReset();
+		LevelOneCache* getL1Cache();
 };
 
 /*
@@ -270,6 +280,11 @@ class SimExecutor {
 		void setCacheSniff(Processor *pr);
 		void resetSharedBus(SharedBus *bus);
 		void resetProcessor(Processor *p);
+
+		template <class T>
+		void verifyCaches(T *obj, int tag) {
+			obj->printData(tag);
+		}
 };
 
 #endif /* COMPONENTS_H_ */

@@ -30,5 +30,27 @@ void printSniff (BusRequest rqst, int tag, BusRqstTranslator &translator);
 void printProcessingSniff (BusRequest rqst, int tag, BusRqstTranslator &translator);
 void printCacheDone();
 void pintL2CacheOperation(int tag);
+void printBoundary();
+
+template <class T>
+void printCache(int tag, T *cache) {
+	string msg;
+	if (cache->dataStore.size() != 0) {
+		cache->storeItr = cache->dataStore.begin();
+			for (; cache->storeItr != cache->dataStore.end(); ++cache->storeItr) {
+				if (cache->storeItr->tag == tag) {
+					break;
+				}
+			}
+			msg = "Current cache line status - tag: " + to_string(cache->storeItr->tag) \
+					+ ", data: " + to_string(cache->storeItr->tag) + ", state: " + \
+					cache->storeItr->getCurrentStateName();
+	}
+	else {
+		msg = "No cache line here";
+	}
+
+	cout << "\t\t [cache line info]: " << msg << endl;
+}
 
 #endif /* LOGGER_H_ */

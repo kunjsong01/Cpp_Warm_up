@@ -87,3 +87,7 @@ void pintL2CacheOperation(int tag) {
 	string msg = "Getting cache line with tag " + to_string(tag) + " from L2 ...";
 	cout << "\t\t [L1d cache querying shared L2]: " << msg << endl;
 }
+
+void printBoundary() {
+	cout << string(150, '=') << endl;
+}

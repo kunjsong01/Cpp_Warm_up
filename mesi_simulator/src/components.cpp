@@ -214,6 +214,10 @@ void LevelOneCache::setProcessorOwnership(Processor *_processor) {
 	this->processor = _processor;
 }
 
+void LevelOneCache::printData(int tag) {
+	printCache<LevelOneCache>(tag, this);
+}
+
 /*******************************************************************************************
  * L2 cache method implementation
  *******************************************************************************************/
@@ -248,6 +252,11 @@ CacheLine LevelTwoCache::returnCacheLine(int _tag) {
 		};
 	}
 	return *(this->storeItr);
+}
+
+void LevelTwoCache::printData(int tag) {
+	cout << "Tag " << tag << " in L2 cache: " << endl;
+	printCache<LevelTwoCache>(tag, this);
 }
 
 /*******************************************************************************************
@@ -303,6 +312,10 @@ void Processor::processorReset() {
 		// reset the L1d cache of this processor
 		this->lOneCache.resetL1dCache();
 	}
+}
+
+LevelOneCache* Processor::getL1Cache() {
+	return &(this->lOneCache);
 }
 
 /*******************************************************************************************
