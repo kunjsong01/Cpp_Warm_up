@@ -1,6 +1,6 @@
 Cache Coherence MESI simulator, start simulation ...
 
-{Processor Local Read}: P0 loads a cache line that already exists in its L1d cache
+{Processor Local Read}: P0 local read, cache hit
 	 Processor 0 sends PrRd requesting tag: 1
 @@ Cycle 1 :
 		 [Bus Broadcasting]: Request: None, Tag: 255
@@ -23,7 +23,7 @@ Tag 1 in L1 cache of Processor 0 :
 Tag 1 in L1 cache of Processor 1 :
 		 [cache line info]: No cache line here
 ======================================================================================================================================================
-{Processor Local Read}: P0 loads a cache line that doesn't exist in its L1d cache, and P1 does not have the copy either
+{Processor Local Read}: P0 local read, cache miss, P1 does not have the copy in its L1d cache either.
 	 Processor 0 sends PrRd requesting tag: 2
 @@ Cycle 1 :
 		 [Bus Broadcasting]: Request: None, Tag: 255
@@ -65,7 +65,7 @@ Tag 2 in L1 cache of Processor 0 :
 Tag 2 in L1 cache of Processor 1 :
 		 [cache line info]: No cache line here
 ======================================================================================================================================================
-{Processor Remote Read}: P0 loads a cache line that doesn't exist in its L1d cache, but P1 has the copy
+{Processor Remote Read}: P0 remote read, cache miss, P1 has the copy in its L1d cache.
 	 Processor 0 sends PrRd requesting tag: 3
 @@ Cycle 1 :
 		 [Bus Broadcasting]: Request: None, Tag: 255
@@ -106,15 +106,15 @@ Tag 3 in L1 cache of Processor 0 :
 Tag 3 in L1 cache of Processor 1 :
 		 [cache line info]: Current cache line status - tag: 3, data: 30, state: Shared
 ======================================================================================================================================================
-{Processor Local Write}: P0 stores data in a cache line that exists in its L1d cache
-	 Processor 0 sends PrWr requesting tag: 4, requesting value: 100
+{Processor Local Write}: P0 local write, cache hit
+	 Processor 0 sends PrWr requesting tag: 4, new value: 100
 @@ Cycle 1 :
 		 [Bus Broadcasting]: Request: None, Tag: 255
   - Acting Processor: 0
 		 [Cache Operation]: Processor id (0), PrWr request - Cache tag: 4
 		 [Cache Operation]: 0-Miss, 1-Hit? Result: 1
 	 Processor 0 PrWr success - 
-		 Cache Line - Tag: 4, State: Exclusive, Data: 100
+		 Cache Line - Tag: 4, State: Modified, Data: 100
 		 [Bus Broadcasting]: Request: None, Tag: 255
   - Sniffing Processor: 1
 		 [Cache Sniffing]: Request: None, Tag: 255
@@ -125,7 +125,49 @@ Total cycle consumption: 1
 
 Verifying the copies of cache line with tag (4) ...
 Tag 4 in L1 cache of Processor 0 :
-		 [cache line info]: Current cache line status - tag: 4, data: 100, state: Exclusive
+		 [cache line info]: Current cache line status - tag: 4, data: 100, state: Modified
 Tag 4 in L1 cache of Processor 1 :
+		 [cache line info]: No cache line here
+======================================================================================================================================================
+{Processor Local Write}: P0 local write, cache miss, P1 does not have the copy
+	 Processor 0 sends PrWr requesting tag: 5, new value: 200
+@@ Cycle 1 :
+		 [Bus Broadcasting]: Request: None, Tag: 255
+  - Acting Processor: 0
+		 [Cache Operation]: Processor id (0), PrWr request - Cache tag: 5
+		 [Cache Operation]: 0-Miss, 1-Hit? Result: 0
+		 [Bus Broadcasting]: Request: BusRd, Tag: 5
+  - Sniffing Processor: 1
+		 [Cache Sniffing]: Request: BusRd, Tag: 5
+		 [Cache Processing Sniffed Signal]: Request: BusRd, Tag: 5
+
+@@ Cycle 2 :
+		 [Bus Broadcasting]: Request: NoFlushOpt, Tag: 5
+  - Acting Processor: 1
+		 [Cache Done]: No more actions or sniffs. This cache finished the job in this round.
+		 [Bus Broadcasting]: Request: NoFlushOpt, Tag: 5
+  - Sniffing Processor: 0
+		 [Cache Sniffing]: Request: NoFlushOpt, Tag: 5
+		 [Cache Processing Sniffed Signal]: Request: NoFlushOpt, Tag: 5
+		 [L1d cache querying shared L2]: Getting cache line with tag 5 from L2 ...
+
+@@ Cycle 3 :
+		 [Bus Broadcasting]: Request: None, Tag: 255
+  - Acting Processor: 0
+		 [Cache Operation]: Processor id (0), PrWr request - Cache tag: 5
+		 [Cache Operation]: 0-Miss, 1-Hit? Result: 1
+	 Processor 0 PrWr success - 
+		 Cache Line - Tag: 5, State: Modified, Data: 200
+		 [Bus Broadcasting]: Request: None, Tag: 255
+  - Sniffing Processor: 1
+		 [Cache Done]: No more actions or sniffs. This cache finished the job in this round.
+
+Successful instruction retirement. 
+Total cycle consumption: 3
+
+Verifying the copies of cache line with tag (5) ...
+Tag 5 in L1 cache of Processor 0 :
+		 [cache line info]: Current cache line status - tag: 5, data: 200, state: Modified
+Tag 5 in L1 cache of Processor 1 :
 		 [cache line info]: No cache line here
 ======================================================================================================================================================

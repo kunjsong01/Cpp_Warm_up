@@ -340,7 +340,7 @@ void Processor::readCacheLine(int tag) {
 void Processor::writeCacheLine(int tag, int value) {
 	this->state = WriteWait;
 	cout << "\t Processor " << this->role << " sends PrWr " << "requesting tag: " << tag \
-			<< ", requesting value: " << value << endl;
+			<< ", new value: " << value << endl;
 	this->lOneCache.setProcessorOwnership(this);
 	this->lOneCache.setCacheState(new CacheProcessingPrWr);
 	this->lOneCache.setPrRequestedTag(tag);
