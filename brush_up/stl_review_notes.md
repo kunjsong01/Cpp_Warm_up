@@ -17,7 +17,7 @@ C++ STL Review
 - [2. Operations on Containers] (#heading-1)
     * [2.1 Iterators](#sub-heading)
     * [2.2 Algorithms](#sub-heading)
-    * [2.3 auto_ptr / unique_pointer (smart pointer) ($)](#sub-heading)
+    * [2.3 unique_pointer (smart pointer) ($)](#sub-heading)
 - [3. C++ value passing (including STL containers)] (#heading-2) 
 
 **C++ STL Review**
@@ -80,7 +80,6 @@ STL provides advanced data structures and operations on them. Data structures in
 
 ## 1.3 list (1%)
 * List or vector? Depending on the cost and benefits ... 
-
 | Data structure      | Insertion | random access | 
 | ------------------- |:-------------|:-------------| 
 | List       | Low cost | Slow |
@@ -155,15 +154,22 @@ STL provides advanced data structures and operations on them. Data structures in
 | Bidirectional iterator      | R/W forward/bakcward   | 
 | Random Access iterator      | R/W with random access (i.e. itr arithmetic)   | 
 
-* No bound checking! could result in segmentation fault.
-
 ## 2.2 Algorithms
 * find() and sort()
 * some functions takes iterator parameters
 * lower_bound() to find the first appearance of a thing in a sorted vector
 
-## 2.3 auto_ptr / unique_pointer (smart pointer) ($)
-* Deprecated. Now using smart pointer (unique_pointer)?
+## 2.3 unique_pointer (smart pointer) ($)
+* constructor takes an object that has dynamic storage duration, i.e. using keyword new
+* Like a raw pointer , -> * operator works fine.
+* Automatic destruction to prevent memory leaks! The object can be deleted when: out of scope, exit on exception ... etc
+* unique_pointer objects can be stored in container classes
+> v.push_back( q ); // gives compilation error
+> v.push_back( std::move(q) ); // to transfer ownership
+
+* The unique_ptr owns the object being created dynamically, and the ownership is UNIQUE.  That object is not movable.
+* No bound checking! could result in segmentation fault.
+* * ""if(!ptr1)..."" checks if unique_ptr ptr1 is empty, i.e. not having any associated raw pointer. 
 
 # 3. C++ value passing (including STL containers)
 
