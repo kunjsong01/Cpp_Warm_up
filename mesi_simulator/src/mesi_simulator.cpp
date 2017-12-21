@@ -29,7 +29,7 @@ int main() {
 	/*
 	 * P0 local read, cache hit
 	 */
-	cout << "{Processor Local Read}: P0 reads in a cache line that already exists in its L1d cache" << endl;
+	cout << "{Processor Local Read}: P0 loads a cache line that already exists in its L1d cache" << endl;
 	simulator.levelOneCacheInsertion(&P0, 1); // test case prep
 	P0.readCacheLine(1); // initiate test case
 	runSimulation(P0, P1, simulator, &bus);
@@ -41,7 +41,7 @@ int main() {
 	/*
 	 * P0 local read, cache miss, P1 does not have the copy
 	 */
-	cout << "{Processor Local Read}: P0 reads in a cache line that doesn't exist in its L1d cache, " \
+	cout << "{Processor Local Read}: P0 loads a cache line that doesn't exist in its L1d cache, " \
 			<< "and P1 does not have the copy either" << endl;
 	P0.readCacheLine(2);
 	runSimulation(P0, P1, simulator, &bus);
@@ -54,16 +54,27 @@ int main() {
 	/*
 	 * P0 remote read, cache miss, P1 does not have the copy
 	 */
-	cout << "{Processor Remote Read}: P0 reads in a cache line that doesn't exist in its L1d cache, " \
+	cout << "{Processor Remote Read}: P0 loads a cache line that doesn't exist in its L1d cache, " \
 			<< "but P1 has the copy" << endl;
 	simulator.levelOneCacheInsertion(&P1, 3); // test case prep
 	P0.readCacheLine(3); // initiate test case
 	runSimulation(P0, P1, simulator, &bus);
 	verify(P0, P1, simulator, l2_cache, 3);
 	printBoundary();
-#if 0
 	resetSystem(P0, P1, simulator, &bus);
+
+	/*
+	 * P0 local write
+	 */
+	cout << "{Processor Local Write}: P0 stores data in a cache line that exists in its L1d cache" << endl;
+	simulator.levelOneCacheInsertion(&P0, 4); // test case prep
+	P0.writeCacheLine(4, 100); // initiate test case
+	runSimulation(P0, P1, simulator, &bus);
+	verify(P0, P1, simulator, l2_cache, 4);
+	printBoundary();
+#if 0
 #endif
+	resetSystem(P0, P1, simulator, &bus);
 
 	return 0;
 }
@@ -73,7 +84,7 @@ void runSimulation(Processor &P0, Processor &P1, SimExecutor &simulator, SharedB
 	int clockCycle = 1;
 	int timeout = 10;
 
-	while (P0.getState() != Succcess) {
+	while (P0.getState() != Success) {
 
 		// stop the simulation if it takes too long
 		if (clockCycle > timeout) {

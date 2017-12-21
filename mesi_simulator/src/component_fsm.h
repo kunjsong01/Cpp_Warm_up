@@ -9,7 +9,7 @@ typedef enum {
 	Idle=0,
 	ReadWait,
 	WriteWait,
-	Succcess // indicate successful instruction retirement
+	Success // indicate successful instruction retirement
 } ProcessorState;
 
 #endif /* COMPONENT_FSM_H_ */

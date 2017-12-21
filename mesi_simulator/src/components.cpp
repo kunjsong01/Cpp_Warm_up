@@ -29,6 +29,10 @@ void CacheLine::setState( State *newState) {
 	this->currentState = newState;
 }
 
+void CacheLine::setdata(int value) {
+	this->data = value;
+}
+
 void CacheLine::stateOperation(Request request, ProcessorRequest prRqst, BusRequest busRqst) {
 
 	if (request == Local) {
@@ -113,7 +117,7 @@ void LevelOneCache::processPrRequest(Processor *processor, ProcessorRequest prRe
 		switch(prReq) {
 			case PrRd:
 				// return the data and set processor state to success
-				processor->state = Succcess;
+				processor->state = Success;
 				//this->storeItr = this->dataStore.begin() + this->itrShift;
 				printCacheLocalOperation(processor->role, prReq, tag, Hit);
 				delete this->cacheState;
@@ -123,6 +127,16 @@ void LevelOneCache::processPrRequest(Processor *processor, ProcessorRequest prRe
 						this->storeItr->currentState->StateName, this->storeItr->tag, this->storeItr->data);
 				break;
 			case PrWr:
+				// report write success
+				processor->state = Success;
+				printCacheLocalOperation(processor->role, prReq, tag, Hit);
+				delete this->cacheState;
+				this->cacheState = new CacheIdle;
+				// write new data into that cache line, if using the same iterator, gives problems for the next printWriteSuccess call
+				this->writeCacheLineData(this->prRequestedTag, this->prRequestedValue);
+				// report success
+				processor->printWriteSuccess(this->storeItr->currentState->StateName, this->storeItr->tag, this->storeItr->data);
+
 				break;
 			default:
 				cout << " Unknown prReq" << endl;
@@ -159,6 +173,10 @@ void LevelOneCache::setCacheState(CacheState *_state) {
 
 void LevelOneCache::setPrRequestedTag(int tag) {
 	this->prRequestedTag = tag;
+}
+
+void LevelOneCache::setPrRequestedValue(int value) {
+	this->prRequestedValue = value;
 }
 
 void LevelOneCache::setPrRequest(ProcessorRequest request) {
@@ -228,6 +246,16 @@ void LevelOneCache::copyCacheLineState() {
 
 	if (tmpState == "Shared") {
 		this->dataStore.back().currentState = new Shared;
+	}
+}
+
+void LevelOneCache::writeCacheLineData(int _tag, int _value) {
+	vector<CacheLine>::iterator tmpWriteItr = this->dataStore.begin();
+	for(; tmpWriteItr != this->dataStore.end(); ++tmpWriteItr) {
+		if (tmpWriteItr->tag == _tag) {
+			// write new data
+			tmpWriteItr->setdata(_value);
+		}
 	}
 }
 
@@ -308,12 +336,25 @@ void Processor::readCacheLine(int tag) {
 	this->lOneCache.setPrRequest(PrRd);
 }
 
-void Processor::writeCacheLine(ProcessorRequest prReq, int tag, int value) {
-
+void Processor::writeCacheLine(int tag, int value) {
+	this->state = WriteWait;
+	cout << "\t Processor " << this->role << " sends PrWr " << "requesting tag: " << tag \
+			<< ", requesting value: " << value << endl;
+	this->lOneCache.setProcessorOwnership(this);
+	this->lOneCache.setCacheState(new CacheProcessingPrWr);
+	this->lOneCache.setPrRequestedTag(tag);
+	this->lOneCache.setPrRequestedValue(value);
+	this->lOneCache.setPrRequest(PrWr);
 }
 
 void Processor::printReadSuccess(string state, int tag, int data) {
 	string rdSuccessMsg = "\t Processor " + to_string(this->role) + " PrRd success - ";
+	cout << rdSuccessMsg << endl;
+	printCacheLine(state, tag, data);
+}
+
+void Processor::printWriteSuccess(string state, int tag, int data) {
+	string rdSuccessMsg = "\t Processor " + to_string(this->role) + " PrWr success - ";
 	cout << rdSuccessMsg << endl;
 	printCacheLine(state, tag, data);
 }
@@ -455,7 +496,7 @@ void CacheProcessingPrRd::operation(LevelOneCache *l1cache) {
 CacheProcessingPrWr::CacheProcessingPrWr() { this->StateName = "CacheProcessingPrWr"; };
 CacheProcessingPrWr::~CacheProcessingPrWr() { }
 void CacheProcessingPrWr::operation(LevelOneCache *l1cache) {
-
+	l1cache->processPrRequest(l1cache->processor, l1cache->prRequest);
 }
 
 CacheSniffing::CacheSniffing() { this->StateName = "CacheSniffing"; };

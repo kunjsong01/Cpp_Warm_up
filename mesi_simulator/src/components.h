@@ -98,6 +98,7 @@ class CacheLine {
 	public:
 		CacheLine( int _tag, int _data);
 		void setState( State *state);
+		void setdata(int value);
 		void stateOperation(Request request, ProcessorRequest prRqst, BusRequest busRqst);
 		string getCurrentStateName();
 		State* getCurrentState();
@@ -153,9 +154,11 @@ class LevelOneCache {
 		void putRequestOnBus(BusRequest busReq);
 		void setCacheState(CacheState *_state);
 		void setPrRequestedTag(int tag);
+		void setPrRequestedValue(int value);
 		void setPrRequest(ProcessorRequest request);
 		void setProcessorOwnership(Processor *_processor);
 		void copyCacheLineState();
+		void writeCacheLineData(int _tag, int _value);
 		void processSniffedSignal(BusRequest sniffedBusSignal, int sniffedTag);
 		void getCacheLineFromL2(int tag);
 		void getCacheLineFromBus(int tag);
@@ -252,8 +255,9 @@ class Processor {
 	public:
 		Processor(ProcessorState _state, ProcessorRole _role, LevelTwoCache *l2cache, SharedBus *bus);
 		void readCacheLine(int tag);
-		void writeCacheLine(ProcessorRequest prReq, int tag, int value);
+		void writeCacheLine(int tag, int value);
 		void printReadSuccess(string state, int tag, int data);
+		void printWriteSuccess(string State, int tag, int data);
 		ProcessorState getState();
 		ProcessorRole getRole();
 		void cacheAct();
