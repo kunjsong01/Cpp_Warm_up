@@ -82,8 +82,16 @@ int main() {
 	printBoundary();
 	resetSystem(P0, P1, simulator, &bus);
 
-
-
+	/*
+	 * P0 remote write, cache miss, P1 does not have the copy
+	 */
+	cout << "{Processor Local Write}: P0 local write, cache miss, P1 has the copy" << endl;
+	simulator.levelOneCacheInsertion(&P1, 6); // test case prep
+	P0.writeCacheLine(6, 75); // initiate test case
+	runSimulation(P0, P1, simulator, &bus);
+	verify(P0, P1, simulator, l2_cache, 6);
+	printBoundary();
+	resetSystem(P0, P1, simulator, &bus);
 
 	return 0;
 }

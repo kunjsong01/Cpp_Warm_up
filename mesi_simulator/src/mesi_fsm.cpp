@@ -60,6 +60,9 @@ void Exclusive::remoteOperation(BusRequest stimulus, CacheLine *cl) {
 			// change state to "Shared"
 			cl->setState(new Shared);
 			break;
+		case BusRdx:
+			cl->setState(new Invalid);
+			break;
 		default:
 			cout << " Cache Line: Unknown local stimulus in Exclusive state" << endl;
 	}

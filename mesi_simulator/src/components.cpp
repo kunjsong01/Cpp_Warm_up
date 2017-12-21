@@ -143,13 +143,21 @@ void LevelOneCache::processPrRequest(Processor *processor, ProcessorRequest prRe
 		}
 	}
 	else {
-		//this->addCacheLineOnMiss(tag, this->l2cache);
 		// print cache miss
 		printCacheLocalOperation(processor->role, prReq, tag, Miss);
+		switch(prReq) {
+			case PrRd:
+				// set bus signal and requested cache line tag
+				this->bus->setBusSignalBuffer(BusRd);
+				this->bus->setBroadcastTag(tag);
+				break;
 
-		// set bus signal and requested cache line tag
-		this->bus->setBusSignalBuffer(BusRd);
-		this->bus->setBroadcastTag(tag);
+			case PrWr:
+				// set bus signal and requested cache line tag
+				this->bus->setBusSignalBuffer(BusRdx);
+				this->bus->setBroadcastTag(tag);
+				break;
+		}
 	}
 }
 
@@ -246,6 +254,12 @@ void LevelOneCache::copyCacheLineState() {
 
 	if (tmpState == "Shared") {
 		this->dataStore.back().currentState = new Shared;
+	}
+
+	if (tmpState == "Invalid" || this->bsRequestSignal == FlushOpt) {
+		// $ to $ transfer, the former has already changed state to Invalid and
+		// the latter should change it to Modified
+		this->dataStore.back().currentState = new Modified;
 	}
 }
 
@@ -515,6 +529,25 @@ void CacheProcessingSniffed::operation(LevelOneCache *l1cache) {
 		if (l1cache->searchTagStore(l1cache->prRequestedTag) == true) {
 			// change current cacheline state to shared
 			l1cache->storeItr->stateOperation(Remote, l1cache->prRequest, BusRd);
+			l1cache->bus->setBusSignalBuffer(FlushOpt);
+			l1cache->storeItr = l1cache->dataStore.begin() + l1cache->itrShift;
+			l1cache->bus->setBusDataBuffer(*(l1cache->storeItr));
+			delete l1cache->cacheState;
+			l1cache->cacheState = new CacheDone;
+		}
+		else {
+			delete l1cache->cacheState;
+			l1cache->cacheState = new CacheDone;
+
+			// otherwise indicate "I don't have it"
+			l1cache->bus->setBusSignalBuffer(NoFlushOpt);
+		}
+	}
+
+	if (l1cache->bsRequestSignal == BusRdx) {
+		if (l1cache->searchTagStore(l1cache->prRequestedTag) == true) {
+			// change current cache line state to shared
+			l1cache->storeItr->stateOperation(Remote, l1cache->prRequest, BusRdx);
 			l1cache->bus->setBusSignalBuffer(FlushOpt);
 			l1cache->storeItr = l1cache->dataStore.begin() + l1cache->itrShift;
 			l1cache->bus->setBusDataBuffer(*(l1cache->storeItr));
