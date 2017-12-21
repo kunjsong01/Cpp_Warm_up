@@ -43,7 +43,7 @@ void printCache(int tag, T *cache) {
 				}
 			}
 			msg = "Current cache line status - tag: " + to_string(cache->storeItr->tag) \
-					+ ", data: " + to_string(cache->storeItr->tag) + ", state: " + \
+					+ ", data: " + to_string(cache->storeItr->data) + ", state: " + \
 					cache->storeItr->getCurrentStateName();
 	}
 	else {

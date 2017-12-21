@@ -48,12 +48,19 @@ void Exclusive::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
 		case PrWr:
 			break;
 		default:
-			cout << " Cache Line: Unknown stimulus in Modified state" << endl;
+			cout << " Cache Line: Unknown local stimulus in Exclusive state" << endl;
 	}
 }
 
 void Exclusive::remoteOperation(BusRequest stimulus, CacheLine *cl) {
-
+	switch(stimulus) {
+		case BusRd:
+			// change state to "Shared"
+			cl->setState(new Shared);
+			break;
+		default:
+			cout << " Cache Line: Unknown local stimulus in Exclusive state" << endl;
+	}
 }
 
 /*

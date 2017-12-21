@@ -50,9 +50,20 @@ int main() {
 
 	resetSystem(P0, P1, simulator, &bus);
 
+
 	/*
 	 * P0 remote read, cache miss, P1 does not have the copy
 	 */
+	cout << "{Processor Remote Read}: P0 reads in a cache line that doesn't exist in its L1d cache, " \
+			<< "but P1 has the copy" << endl;
+	simulator.levelOneCacheInsertion(&P1, 3); // test case prep
+	P0.readCacheLine(3); // initiate test case
+	runSimulation(P0, P1, simulator, &bus);
+	verify(P0, P1, simulator, l2_cache, 3);
+	printBoundary();
+#if 0
+	resetSystem(P0, P1, simulator, &bus);
+#endif
 
 	return 0;
 }
@@ -65,9 +76,9 @@ void runSimulation(Processor &P0, Processor &P1, SimExecutor &simulator, SharedB
 	while (P0.getState() != Succcess) {
 
 		// stop the simulation if it takes too long
-		if (clockCycle == timeout) {
+		if (clockCycle > timeout) {
 			// TO-DO: throw exception saying "Maximum cycle number reached. Expecting Read/Write to finish within 100 cycles"
-			cout << "ERROR !!! Maximum cycle number reached. Expecting Read/Write to finish within 100 cycles" << endl;
+			cout << "ERROR !!! Maximum cycle number reached. Expecting Read/Write to finish within 10 cycles" << endl;
 			break;
 		}
 		cout << "@@ Cycle " << clockCycle << " :" << endl;
@@ -112,7 +123,7 @@ void resetSystem (Processor &P0, Processor &P1, SimExecutor &simulator, SharedBu
 }
 
 void verify (Processor &P0, Processor &P1, SimExecutor &simulator, LevelTwoCache &l2_cache, int tag) {
-	// verification of the copies of the target cache line
+	// verification of the copies of the target cache line in each L1d cache
 	cout << "Verifying the copies of cache line with tag (" << tag << ") ..." << endl;
 
 	cout << "Tag " << tag << " in L1 cache of Processor " << P0.getRole() << " :" << endl;
@@ -120,8 +131,6 @@ void verify (Processor &P0, Processor &P1, SimExecutor &simulator, LevelTwoCache
 
 	cout << "Tag " << tag << " in L1 cache of Processor " << P1.getRole() << " :" << endl;
 	simulator.verifyCaches<LevelOneCache>(P1.getL1Cache(), tag);
-
-	simulator.verifyCaches<LevelTwoCache>(&l2_cache, tag);
 
 	// TO-DO: could have done another function to compare the states of each target cache line,
 	// to confirm they are "coherent"

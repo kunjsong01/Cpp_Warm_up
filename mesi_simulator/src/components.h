@@ -101,6 +101,7 @@ class CacheLine {
 		void stateOperation(Request request, ProcessorRequest prRqst, BusRequest busRqst);
 		string getCurrentStateName();
 		State* getCurrentState();
+		void relocateStatePtr();
 };
 
 /*
@@ -133,11 +134,11 @@ class LevelOneCache {
 		int maxSize = 5;
 		int itrShift = 0;
 		// processor to which it's connecting
-		Processor *processor;
+		Processor *processor = NULL;
 		// connect L1d cache to the shared bus
 		SharedBus *bus = NULL;
 		// Logical link between current L1d and L2
-		LevelTwoCache *l2cache;
+		LevelTwoCache *l2cache = NULL;
 		// current state of cache
 		CacheState *cacheState;
 		ProcessorRequest prRequest; // processor request signal
@@ -146,7 +147,6 @@ class LevelOneCache {
 		int prRequestedValue; // processor requested value
 
 		void lruDelete();
-		void addCacheLineOnMiss(int _tag, LevelTwoCache *l2cache);
 
 		bool searchTagStore(int tag);
 		void processPrRequest(Processor *processor, ProcessorRequest prReq);
@@ -155,12 +155,33 @@ class LevelOneCache {
 		void setPrRequestedTag(int tag);
 		void setPrRequest(ProcessorRequest request);
 		void setProcessorOwnership(Processor *_processor);
+		void copyCacheLineState();
 		void processSniffedSignal(BusRequest sniffedBusSignal, int sniffedTag);
 		void getCacheLineFromL2(int tag);
+		void getCacheLineFromBus(int tag);
 		void resetL1dCache();
 		void printData(int tag);
 		void act();
 		void sniff();
+
+		template <class T>
+		void addCacheLineOnMiss(int _tag, T *dataSource) {
+			// check capacity
+			if (this->dataStore.size() == this->maxSize ) {
+				this->storeItr = this->dataStore.begin();
+				this->dataStore.erase(this->storeItr);
+			}
+
+			// query the next level cache, i.e. L2 cache for the missing line
+			this->dataStore.push_back(dataSource->returnCacheLine(_tag));
+
+			// copy state
+			this->copyCacheLineState();
+
+			// reloacate the cache line state pointer in the data source
+			// this is to prevent "ptr being freed was not allocated"
+			dataSource->statePtrRelocate(_tag);
+		}
 
 	public:
 		LevelOneCache(LevelTwoCache *_l2cache, SharedBus *bus);
@@ -194,6 +215,7 @@ class LevelTwoCache {
 	public:
 		LevelTwoCache();
 		~LevelTwoCache();
+		void statePtrRelocate(int tag);
 		void printData(int tag);
 };
 
@@ -265,6 +287,8 @@ class SharedBus {
 		int getBroadcastTag();
 		void printBusInfo ();
 		void busReset();
+		CacheLine returnCacheLine(int tag);
+		void statePtrRelocate(int tag);
 };
 
 /*
