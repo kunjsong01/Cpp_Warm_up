@@ -46,6 +46,8 @@ void Exclusive::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
 			// no state change for local read in modified state
 			break;
 		case PrWr:
+			// change state to modified
+			cl->setState(new Modified);
 			break;
 		default:
 			cout << " Cache Line: Unknown local stimulus in Exclusive state" << endl;
@@ -77,6 +79,7 @@ void Shared::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
 			// no state change for local read in modified state
 			break;
 		case PrWr:
+			cl->setState(new Modified);
 			break;
 		default:
 			cout << " Cache Line: Unknown stimulus in Modified state" << endl;

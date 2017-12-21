@@ -255,6 +255,7 @@ void LevelOneCache::writeCacheLineData(int _tag, int _value) {
 		if (tmpWriteItr->tag == _tag) {
 			// write new data
 			tmpWriteItr->setdata(_value);
+			tmpWriteItr->currentState->localOperation(this->prRequest, &(*tmpWriteItr));
 		}
 	}
 }
