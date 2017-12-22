@@ -331,7 +331,6 @@ void LevelTwoCache::statePtrRelocate(int tag) {
 }
 
 void LevelTwoCache::printData(int tag) {
-	cout << "Tag " << tag << " in L2 cache: " << endl;
 	printCache<LevelTwoCache>(tag, this);
 }
 

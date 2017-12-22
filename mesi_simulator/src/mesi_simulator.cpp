@@ -154,12 +154,16 @@ void verify (Processor &P0, Processor &P1, SimExecutor &simulator, LevelTwoCache
 	// verification of the copies of the target cache line in each L1d cache
 	cout << "Verifying the copies of cache line with tag (" << tag << ") ..." << endl;
 
-	cout << "Tag " << tag << " in L1 cache of Processor " << P0.getRole() << " :" << endl;
+	cout << "Tag " << tag << " in L1d cache of Processor " << P0.getRole() << " :" << endl;
 	simulator.verifyCaches<LevelOneCache>(P0.getL1Cache(), tag);
 
-	cout << "Tag " << tag << " in L1 cache of Processor " << P1.getRole() << " :" << endl;
+	cout << "Tag " << tag << " in L1d cache of Processor " << P1.getRole() << " :" << endl;
 	simulator.verifyCaches<LevelOneCache>(P1.getL1Cache(), tag);
+
+	cout << "Tag " << tag << " in shared L2 : " << endl;
+	simulator.verifyCaches<LevelTwoCache>(&l2_cache, tag);
 
 	// TO-DO: could have done another function to compare the states of each target cache line,
 	// to confirm they are "coherent"
 }
+

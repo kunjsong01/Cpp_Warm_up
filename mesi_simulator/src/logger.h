@@ -10,6 +10,7 @@
 
 #include <string>
 #include <map>
+#include <typeinfo>
 #include "simulator.h"
 #include "request.h"
 
@@ -42,9 +43,18 @@ void printCache(int tag, T *cache) {
 					break;
 				}
 			}
-			msg = "Current cache line status - tag: " + to_string(cache->storeItr->tag) \
-					+ ", data: " + to_string(cache->storeItr->data) + ", state: " + \
-					cache->storeItr->getCurrentStateName();
+
+			string tmpType = typeid(*cache).name();
+			string tmpL2Type = "LevelTwo";
+			if (tmpType.find(tmpL2Type) != string::npos) {
+				msg = "Current cache line status - tag: " + to_string(cache->storeItr->tag) \
+						+ ", data: " + to_string(cache->storeItr->data);
+			}
+			else {
+				msg = "Current cache line status - tag: " + to_string(cache->storeItr->tag) \
+						+ ", data: " + to_string(cache->storeItr->data) + ", state: " + \
+						cache->storeItr->getCurrentStateName();
+			}
 	}
 	else {
 		msg = "No cache line here";

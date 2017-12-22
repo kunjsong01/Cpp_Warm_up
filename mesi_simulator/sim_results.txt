@@ -18,10 +18,12 @@ Successful instruction retirement.
 Total cycle consumption: 1
 
 Verifying the copies of cache line with tag (1) ...
-Tag 1 in L1 cache of Processor 0 :
+Tag 1 in L1d cache of Processor 0 :
 		 [cache line info]: Current cache line status - tag: 1, data: 10, state: Exclusive
-Tag 1 in L1 cache of Processor 1 :
+Tag 1 in L1d cache of Processor 1 :
 		 [cache line info]: No cache line here
+Tag 1 in shared L2 : 
+		 [cache line info]: Current cache line status - tag: 1, data: 10
 ======================================================================================================================================================
 {Processor Local Read}: P0 local read, cache miss, P1 does not have the copy in its L1d cache either.
 	 Processor 0 sends PrRd requesting tag: 2
@@ -60,10 +62,12 @@ Successful instruction retirement.
 Total cycle consumption: 3
 
 Verifying the copies of cache line with tag (2) ...
-Tag 2 in L1 cache of Processor 0 :
+Tag 2 in L1d cache of Processor 0 :
 		 [cache line info]: Current cache line status - tag: 2, data: 20, state: Exclusive
-Tag 2 in L1 cache of Processor 1 :
+Tag 2 in L1d cache of Processor 1 :
 		 [cache line info]: No cache line here
+Tag 2 in shared L2 : 
+		 [cache line info]: Current cache line status - tag: 2, data: 20
 ======================================================================================================================================================
 {Processor Remote Read}: P0 remote read, cache miss, P1 has the copy in its L1d cache.
 	 Processor 0 sends PrRd requesting tag: 3
@@ -101,10 +105,12 @@ Successful instruction retirement.
 Total cycle consumption: 3
 
 Verifying the copies of cache line with tag (3) ...
-Tag 3 in L1 cache of Processor 0 :
+Tag 3 in L1d cache of Processor 0 :
 		 [cache line info]: Current cache line status - tag: 3, data: 30, state: Modified
-Tag 3 in L1 cache of Processor 1 :
+Tag 3 in L1d cache of Processor 1 :
 		 [cache line info]: Current cache line status - tag: 3, data: 30, state: Shared
+Tag 3 in shared L2 : 
+		 [cache line info]: Current cache line status - tag: 3, data: 30
 ======================================================================================================================================================
 {Processor Local Write}: P0 local write, cache hit
 	 Processor 0 sends PrWr requesting tag: 4, new value: 100
@@ -124,10 +130,12 @@ Successful instruction retirement.
 Total cycle consumption: 1
 
 Verifying the copies of cache line with tag (4) ...
-Tag 4 in L1 cache of Processor 0 :
+Tag 4 in L1d cache of Processor 0 :
 		 [cache line info]: Current cache line status - tag: 4, data: 100, state: Modified
-Tag 4 in L1 cache of Processor 1 :
+Tag 4 in L1d cache of Processor 1 :
 		 [cache line info]: No cache line here
+Tag 4 in shared L2 : 
+		 [cache line info]: Current cache line status - tag: 4, data: 40
 ======================================================================================================================================================
 {Processor Local Write}: P0 local write, cache miss, P1 does not have the copy
 	 Processor 0 sends PrWr requesting tag: 5, new value: 200
@@ -166,10 +174,12 @@ Successful instruction retirement.
 Total cycle consumption: 3
 
 Verifying the copies of cache line with tag (5) ...
-Tag 5 in L1 cache of Processor 0 :
+Tag 5 in L1d cache of Processor 0 :
 		 [cache line info]: Current cache line status - tag: 5, data: 200, state: Modified
-Tag 5 in L1 cache of Processor 1 :
+Tag 5 in L1d cache of Processor 1 :
 		 [cache line info]: No cache line here
+Tag 5 in shared L2 : 
+		 [cache line info]: Current cache line status - tag: 5, data: 50
 ======================================================================================================================================================
 {Processor Local Write}: P0 local write, cache miss, P1 has the copy
 	 Processor 0 sends PrWr requesting tag: 6, new value: 75
@@ -207,8 +217,10 @@ Successful instruction retirement.
 Total cycle consumption: 3
 
 Verifying the copies of cache line with tag (6) ...
-Tag 6 in L1 cache of Processor 0 :
+Tag 6 in L1d cache of Processor 0 :
 		 [cache line info]: Current cache line status - tag: 6, data: 75, state: Modified
-Tag 6 in L1 cache of Processor 1 :
+Tag 6 in L1d cache of Processor 1 :
 		 [cache line info]: Current cache line status - tag: 6, data: 60, state: Invalid
+Tag 6 in shared L2 : 
+		 [cache line info]: Current cache line status - tag: 6, data: 60
 ======================================================================================================================================================
