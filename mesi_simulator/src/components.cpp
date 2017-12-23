@@ -102,6 +102,19 @@ bool LevelOneCache::searchTagStore(int tag) {
 	return isIn;
 }
 
+void LevelOneCache::cacheLineStateOperation(int tag) {
+	// search the tag in this cache
+	this->storeItr = this->dataStore.begin();
+	this->itrShift = 0;
+	for (; this->storeItr != this->dataStore.end(); ++this->storeItr) {
+		if (this->storeItr->tag == tag) {
+			this->storeItr->currentState->remoteOperation(this->bsRequestSignal, &(*(this->storeItr)));
+			break;
+		}
+		++this->itrShift;
+	}
+}
+
 void LevelOneCache::processPrRequest(Processor *processor, ProcessorRequest prReq) {
 
 	// set cache state
@@ -127,12 +140,15 @@ void LevelOneCache::processPrRequest(Processor *processor, ProcessorRequest prRe
 						this->storeItr->currentState->StateName, this->storeItr->tag, this->storeItr->data);
 				break;
 			case PrWr:
+				// broadcast BusUpgr
+				this->bus->setBusSignalBuffer(BusUpgr);
+				this->bus->setBroadcastTag(tag);
 				// report write success
 				processor->state = Success;
 				printCacheLocalOperation(processor->role, prReq, tag, Hit);
 				delete this->cacheState;
 				this->cacheState = new CacheIdle;
-				// write new data into that cache line, if using the same iterator, gives problems for the next printWriteSuccess call
+				// write new data into that cache line, if using the same iterator, it gives problems for the next printWriteSuccess call
 				this->writeCacheLineData(this->prRequestedTag, this->prRequestedValue);
 				// report success
 				processor->printWriteSuccess(this->storeItr->currentState->StateName, this->storeItr->tag, this->storeItr->data);
@@ -580,6 +596,20 @@ void CacheProcessingSniffed::operation(LevelOneCache *l1cache) {
 			//set back to original processing state
 			delete l1cache->cacheState;
 			l1cache->cacheState = new CacheProcessingPrRd;
+		}
+	}
+
+	if (l1cache->bsRequestSignal == BusUpgr) {
+		if (l1cache->searchTagStore(l1cache->prRequestedTag) == true) {
+			// change current cacheline state to shared
+			l1cache->cacheLineStateOperation(l1cache->prRequestedTag);
+			delete l1cache->cacheState;
+			l1cache->cacheState = new CacheDone;
+		}
+		else {
+			l1cache->bus->busReset();
+			delete l1cache->cacheState;
+			l1cache->cacheState = new CacheDone;
 		}
 	}
 }

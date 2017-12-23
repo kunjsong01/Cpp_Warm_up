@@ -63,6 +63,9 @@ void Exclusive::remoteOperation(BusRequest stimulus, CacheLine *cl) {
 		case BusRdx:
 			cl->setState(new Invalid);
 			break;
+		case BusUpgr:
+			cl->setState(new Invalid);
+			break;
 		default:
 			cout << " Cache Line: Unknown local stimulus in Exclusive state" << endl;
 	}
@@ -85,11 +88,18 @@ void Shared::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
 			cl->setState(new Modified);
 			break;
 		default:
-			cout << " Cache Line: Unknown stimulus in Modified state" << endl;
+			cout << " Cache Line: Unknown stimulus in Shared state" << endl;
 	}
 }
 
 void Shared::remoteOperation(BusRequest stimulus, CacheLine *cl) {
+	switch(stimulus) {
+		case BusUpgr:
+			cl->setState(new Invalid);
+			break;
+		default:
+			cout << " Cache Line: Unknown remote stimulus in Shared state" << endl;
+	}
 
 }
 
@@ -109,7 +119,7 @@ void Invalid::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
 		case PrWr:
 			break;
 		default:
-			cout << " Cache Line: Unknown stimulus in Modified state" << endl;
+			cout << " Cache Line: Unknown stimulus in Invalid state" << endl;
 	}
 }
 

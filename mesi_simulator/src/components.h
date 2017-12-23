@@ -162,6 +162,7 @@ class LevelOneCache {
 		void processSniffedSignal(BusRequest sniffedBusSignal, int sniffedTag);
 		void getCacheLineFromL2(int tag);
 		void getCacheLineFromBus(int tag);
+		void cacheLineStateOperation(int tag);
 		void resetL1dCache();
 		void printData(int tag);
 		void act();

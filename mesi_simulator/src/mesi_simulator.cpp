@@ -93,6 +93,14 @@ int main() {
 	printBoundary();
 	resetSystem(P0, P1, simulator, &bus);
 
+	/*
+	 * Write back test.
+	 * P0 has a "Modified" cache line, P1 loads the same cache line.
+	 * P0 should write back to L2 cache and change the state to "Shared".
+	 */
+
+	 */
+
 	return 0;
 }
 

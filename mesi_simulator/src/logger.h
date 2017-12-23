@@ -28,6 +28,7 @@ void printCacheLocalOperation (ProcessorRole id, ProcessorRequest pr, int tag, H
 void printFSMOperation (string msg);
 void printBus (BusRequest rqst, int tag, BusRqstTranslator &translator);
 void printSniff (BusRequest rqst, int tag, BusRqstTranslator &translator);
+void printCacheSearch(int tag);
 void printProcessingSniff (BusRequest rqst, int tag, BusRqstTranslator &translator);
 void printCacheDone();
 void pintL2CacheOperation(int tag);
