@@ -158,6 +158,8 @@ class LevelOneCache {
 		void setPrRequest(ProcessorRequest request);
 		void setProcessorOwnership(Processor *_processor);
 		void copyCacheLineState();
+		void checkWriteBack(int tag);
+		void writeBack();
 		void writeCacheLineData(int _tag, int _value);
 		void processSniffedSignal(BusRequest sniffedBusSignal, int sniffedTag);
 		void getCacheLineFromL2(int tag);
@@ -221,6 +223,7 @@ class LevelTwoCache {
 		~LevelTwoCache();
 		void statePtrRelocate(int tag);
 		void printData(int tag);
+		void updateData(int tag, int data);
 };
 
 /*

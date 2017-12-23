@@ -32,6 +32,7 @@ void printCacheSearch(int tag);
 void printProcessingSniff (BusRequest rqst, int tag, BusRqstTranslator &translator);
 void printCacheDone();
 void pintL2CacheOperation(int tag);
+void printWriteBack(int tag, int data);
 void printBoundary();
 
 template <class T>

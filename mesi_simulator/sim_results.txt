@@ -260,6 +260,7 @@ Tag 7 in shared L2 :
   - Sniffing Processor: 0
 		 [Cache Sniffing]: Request: BusRd, Tag: 7
 		 [Cache Processing Sniffed Signal]: Request: BusRd, Tag: 7
+		 [L1d cache write back]: Cache line - tag: 7, new data: 99. 
 
 @@ Cycle 2 :
 		 [Bus Broadcasting]: Request: FlushOpt, Tag: 7
@@ -290,5 +291,5 @@ Tag 7 in L1d cache of Processor 0 :
 Tag 7 in L1d cache of Processor 1 :
 		 [cache line info]: Current cache line status - tag: 7, data: 99, state: Shared
 Tag 7 in shared L2 : 
-		 [cache line info]: Current cache line status - tag: 7, data: 70
+		 [cache line info]: Current cache line status - tag: 7, data: 99
 ======================================================================================================================================================

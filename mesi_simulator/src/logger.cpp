@@ -98,6 +98,11 @@ void pintL2CacheOperation(int tag) {
 	cout << "\t\t [L1d cache querying shared L2]: " << msg << endl;
 }
 
+void printWriteBack(int tag, int data) {
+	string msg = "Cache line - tag: " + to_string(tag) +  ", new data: " + to_string(data);
+	cout << "\t\t [L1d cache write back]: " << msg << ". " << endl;
+}
+
 void printBoundary() {
 	cout << string(150, '=') << endl;
 }

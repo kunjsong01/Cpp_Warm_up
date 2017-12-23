@@ -279,6 +279,41 @@ void LevelOneCache::copyCacheLineState() {
 	}
 }
 
+void LevelOneCache::checkWriteBack(int tag) {
+	// another bad design... but it fixed the issue.
+	// state context is already set to cache line, however, just realised that modified state needs to use this function in
+	// the context of L1d cache!
+	// search the tag in this cache
+	this->storeItr = this->dataStore.begin();
+	for (; this->storeItr != this->dataStore.end(); ++this->storeItr) {
+		if (this->storeItr->tag == this->prRequestedTag) {
+			break;
+		}
+	}
+
+	// check if the state is modified
+	if (this->storeItr->currentState->StateName == "Modified") {
+		// TO-DO: print write back
+		printWriteBack(this->prRequestedTag, this->prRequestedValue);
+		this->writeBack();
+	}
+}
+
+void LevelOneCache::writeBack() {
+	int tmpDataValue = 0;
+	// search the tag in this cache
+	this->storeItr = this->dataStore.begin();
+	for (; this->storeItr != this->dataStore.end(); ++this->storeItr) {
+		if (this->storeItr->tag == this->prRequestedTag) {
+			tmpDataValue = this->storeItr->data;
+			break;
+		}
+	}
+
+	// write back to keep the data clean when the other processor loads the "dirty" cacheline
+	this->l2cache->updateData(this->prRequestedTag, tmpDataValue);
+}
+
 void LevelOneCache::writeCacheLineData(int _tag, int _value) {
 	vector<CacheLine>::iterator tmpWriteItr = this->dataStore.begin();
 	for(; tmpWriteItr != this->dataStore.end(); ++tmpWriteItr) {
@@ -348,6 +383,18 @@ void LevelTwoCache::statePtrRelocate(int tag) {
 
 void LevelTwoCache::printData(int tag) {
 	printCache<LevelTwoCache>(tag, this);
+}
+
+void LevelTwoCache::updateData(int tag, int data) {
+
+	this->storeItr = this->dataStore.begin();
+	for (; this->storeItr != this->dataStore.end(); ++this->storeItr) {
+		// break on the matching cache line
+		if ((this->storeItr->tag) == tag) {
+			this->storeItr->data = data;
+			break;
+		}
+	}
 }
 
 /*******************************************************************************************
@@ -542,11 +589,16 @@ void CacheProcessingSniffed::operation(LevelOneCache *l1cache) {
 	// sniffing cache has the copy, set to shared and return it because the acting cache is trying to read it
 	if (l1cache->bsRequestSignal == BusRd) {
 		if (l1cache->searchTagStore(l1cache->prRequestedTag) == true) {
+
+			// check write back
+			l1cache->checkWriteBack(l1cache->prRequestedTag);
+
 			// change current cacheline state to shared
 			l1cache->storeItr->stateOperation(Remote, l1cache->prRequest, BusRd);
 			l1cache->bus->setBusSignalBuffer(FlushOpt);
 			l1cache->storeItr = l1cache->dataStore.begin() + l1cache->itrShift;
 			l1cache->bus->setBusDataBuffer(*(l1cache->storeItr));
+
 			delete l1cache->cacheState;
 			l1cache->cacheState = new CacheDone;
 		}
