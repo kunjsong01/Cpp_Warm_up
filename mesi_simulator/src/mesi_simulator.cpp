@@ -98,12 +98,24 @@ int main() {
 	 * P0 has a "Modified" cache line, P1 loads the same cache line.
 	 * P0 should write back to L2 cache and change the state to "Shared".
 	 */
-
-	 */
+	cout << "{Processor Write Back}: P0 has a modified cache line, P1 loads the same cache line. " << \
+			"P0 writes back to L2. Both copies change to shared state in L1d." << endl;
+	simulator.levelOneCacheInsertion(&P0, 7);
+	P0.writeCacheLine(7, 99); // initiate test case
+	runSimulation(P0, P1, simulator, &bus);
+	verify(P0, P1, simulator, l2_cache, 7);
+	P1.readCacheLine(7); // Let P1 read the same cache line
+	runSimulation(P1, P0, simulator, &bus); // Now the initiating processor should be P1
+	verify(P0, P1, simulator, l2_cache, 7);
+	printBoundary();
+	resetSystem(P0, P1, simulator, &bus);
 
 	return 0;
 }
 
+/*
+ * Here P0 is the "initiator", P1 is the "follower"
+ */
 void runSimulation(Processor &P0, Processor &P1, SimExecutor &simulator, SharedBus *bus) {
 
 	int clockCycle = 1;

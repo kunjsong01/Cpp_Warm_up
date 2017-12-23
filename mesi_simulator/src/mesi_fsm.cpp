@@ -29,7 +29,13 @@ void Modified::localOperation(ProcessorRequest stimulus, CacheLine *cl) {
 }
 
 void Modified::remoteOperation(BusRequest stimulus, CacheLine *cl) {
-
+	switch(stimulus) {
+		case PrRd:
+			cl->setState(new Shared);
+			break;
+		default:
+			cout << " Cache Line: Unknown remote stimulus in Modified state" << endl;
+	}
 }
 
 /*

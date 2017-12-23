@@ -272,7 +272,7 @@ void LevelOneCache::copyCacheLineState() {
 		this->dataStore.back().currentState = new Shared;
 	}
 
-	if (tmpState == "Invalid" || this->bsRequestSignal == FlushOpt) {
+	if (tmpState == "Invalid" && this->bsRequestSignal == FlushOpt) {
 		// $ to $ transfer, the former has already changed state to Invalid and
 		// the latter should change it to Modified
 		this->dataStore.back().currentState = new Modified;
